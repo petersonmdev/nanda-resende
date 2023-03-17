@@ -1,0 +1,388 @@
+/* Main Body */
+@page {
+	margin: 5mm;
+}
+
+.etiqueta {
+	width: 10cm;
+	height: 15cm;
+	border: solid 2px #000;
+	border-radius: 5px;
+}
+.pedido {
+	border: solid 2px #752566;
+	border-radius: 5px;
+}
+body {
+	background: #fff;
+	color: #000;
+	margin: 0cm;
+	font-family: "Arial Black",
+	"Arial Bold",
+	Gadget,
+	sans-serif;
+	/* want to use custom fonts? http://docs.wpovernight.com/woocommerce-pdf-invoices-packing-slips/using-custom-fonts/ */
+	font-size: 9pt;
+	line-height: 100%; /* fixes inherit dompdf bug */
+}
+
+h1, h2, h3, h4 {
+	font-weight: bold;
+	margin: 0;
+}
+
+h1 {
+	font-size: 16pt;
+	margin: 5mm 0;
+}
+
+h2 {
+	font-size: 14pt;
+}
+
+h3, h4 {
+	font-size: 9pt;
+}
+
+
+ol,
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+li,
+ul {
+	margin-bottom: 0.75em;
+}
+
+p {
+	margin: 0;
+	padding: 0;
+}
+
+p + p {
+	margin-top: 1.25em;
+}
+
+a { 
+	border-bottom: 1px solid; 
+	text-decoration: none; 
+}
+
+/* Basic Table Styling */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	page-break-inside: always;
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+th, td {
+	vertical-align: top;
+	text-align: left;
+}
+
+table.container {
+	width:100%;
+	border: 0;
+}
+
+tr.no-borders,
+td.no-borders {
+	border: 0 !important;
+	border-top: 0 !important;
+	border-bottom: 0 !important;
+	padding: 0 !important;
+	width: auto;
+}
+
+div.bottom-spacer {
+	clear: both;
+	height: 8mm;
+}
+
+/* Header */
+table.head {
+	padding: 10px;
+}
+
+td.header img {
+	max-height: 3cm; /* may be overriden by the settings */
+	width: auto;
+}
+
+.etiqueta td.header img {
+	max-height: 3cm;
+	width: auto;
+}
+
+.etiqueta table,
+.etiqueta .shop-address {
+	font-size: 15px!important;
+	font-weight: bold;
+}
+
+td.header {
+	font-size: 16pt;
+	font-weight: 700;
+}
+
+td.shop-name {
+	text-transform: uppercase;
+}
+
+td.shop-info {
+	width: 40%;
+	text-align: right;
+}
+
+.etiqueta td.shop-info {
+	width: 100%;
+	text-align: left;
+}
+
+.document-type-label {
+	text-transform: uppercase;
+	padding: 10px 5px 5px;
+	background: #b949a5;
+	color: #752566;
+}
+
+.etiqueta .document-type-label {
+	text-transform: uppercase;
+	text-align: center;
+	padding: 10px 5px 5px;
+	background: none;
+	border-bottom: solid 2px #000;
+	color: #000;
+}
+
+/* Recipient addressses & order data */
+table.order-data-addresses {
+	width: 100%;
+	margin-bottom: 10mm;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.title-destinatario {
+	text-transform: uppercase;
+	text-align: left;
+	margin: 0;
+	padding: 10px 5px 5px;
+	margin-bottom: 15px;
+	width: 140px;
+	background: #000;
+	color: #fff;
+}
+
+table.remetente {
+	padding: 10px;
+}
+
+.separator {
+	width: 100%;
+	border-top: solid 2px #000;
+}
+
+.etiqueta table.order-data-addresses .address.shipping-address {
+	padding: 0 0 10px !important;
+}
+
+.etiqueta table.order-data-addresses .codebar {
+	width: 20%;
+}
+
+.etiqueta table.order-data-addresses .codebar img{
+	margin-left: 0;
+}
+
+.etiqueta table.order-data-addresses .codebar-obs {
+	text-align: left;
+	width: 80%;
+}
+
+td.order-data {
+	width: 40%;
+}
+
+.etiqueta td.order-data {
+	width: 55%!important;
+}
+
+.etiqueta td.order-data.topo {
+	width: 50%;
+	text-align: right!important;
+}
+
+.etiqueta table.recebedor {
+	padding: 10px;
+	width: 100%!important;
+}
+
+.etiqueta table tr.linha01 td:nth-child(2),
+.etiqueta table tr.linha02 td:nth-child(2) {
+	width: 100%!important;
+	border-bottom: solid 1px #000!important;
+}
+
+.etiqueta .codebar {
+	padding: 0;
+	margin: 0;
+}
+
+.invoice .shipping-address {
+	width: 30%;
+}
+
+.packing-slip .billing-address {
+	width: 30%;
+}
+
+td.order-data table th {
+	font-weight: normal;
+	padding-right: 2mm;
+}
+
+/* Order details */
+table.order-details {
+	width:100%;
+	margin-bottom: 0mm;
+}
+
+.sku {
+	width: 10%;
+}
+
+.quantity,
+.price {
+	width: 20%;
+}
+
+.order-details tr {
+	page-break-inside: always;
+	page-break-after: auto;	
+}
+
+.order-details td,
+.order-details th {
+	border-bottom: 1px #752566 solid;
+	border-top: 1px #752566 solid;
+	padding: 0.375em;
+}
+
+.order-details th {
+	font-weight: bold;
+	text-align: left;
+}
+
+.order-details thead th {
+	color: white;
+	background-color: #b949a5;
+	border-color: #b949a5;
+}
+
+/* product bundles compatibility */
+.order-details tr.bundled-item td.product {
+	padding-left: 5mm;
+}
+
+.order-details tr.product-bundle td,
+.order-details tr.bundled-item td {
+	border: 0;
+}
+
+.order-details tr.bundled-item.hidden {
+	display: none;
+}
+
+/* item meta formatting for WC2.6 and older */
+dl {
+	margin: 4px 0;
+}
+
+dt, dd, dd p {
+	display: inline;
+	font-size: 7pt;
+	line-height: 7pt;
+}
+
+dd {
+	margin-left: 5px;
+}
+
+dd:after {
+	content: "\A";
+	white-space: pre;
+}
+/* item-meta formatting for WC3.0+ */
+.wc-item-meta {
+	margin: 4px 0;
+	font-size: 7pt;
+	line-height: 7pt;
+}
+.wc-item-meta p {
+	display: inline;
+}
+.wc-item-meta li {
+	margin: 0;
+	margin-left: 5px;
+}
+
+/* Notes & Totals */
+.customer-notes {
+	margin-top: 5mm;
+}
+
+table.totals {
+	width: 100%;
+	margin-top: 5mm;
+}
+
+table.totals th,
+table.totals td {
+	border: 0;
+	border-top: 1px solid #ffd6E5;
+	border-bottom: 1px solid #ffd6E5;
+}
+
+table.totals th.description,
+table.totals td.price {
+	width: 50%;
+}
+
+table.totals tr.order_total td,
+table.totals tr.order_total th {
+	border-top: 2px solid #b949a5;
+	border-bottom: 2px solid #b949a5;
+	font-weight: bold;
+}
+
+table.totals tr.payment_method {
+	display: none;
+}
+
+/* Footer Imprint */
+#footer {
+	position: absolute;
+	bottom: -2cm;
+	left: 0;
+	right: 0;
+	height: 2cm; /* if you change the footer height, don't forget to change the bottom (=negative height) and the @page margin-bottom as well! */
+	text-align: center;
+	border-top: 0.1mm solid gray;
+	margin-bottom: 0;
+	padding-top: 2mm;
+}
+
+/* page numbers */
+.pagenum:before {
+	content: counter(page);
+}
+.pagenum,.pagecount {
+	font-family: sans-serif;
+}

@@ -1,0 +1,81 @@
+    @font-face {
+  font-family: "icons";
+  src: url("./icons.eot");
+  src: url("./icons.eot?#iefix") format("embedded-opentype"),
+       url("./icons.woff2") format("woff2"),
+       url("./icons.woff") format("woff"),
+       url("./icons.ttf") format("truetype"),
+       url("./icons.svg#icons") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "icons";
+    src: url("./icons.svg#icons") format("svg");
+  }
+}
+
+    .fi:before{
+        display: inline-block;
+  font-family: "icons";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+    }
+
+    .icons-search:before { content: "\f100"; }
+.icons-cart:before { content: "\f101"; }
+.icons-woman:before { content: "\f102"; }
+.icons-male:before { content: "\f103"; }
+.icons-pay:before { content: "\f104"; }
+.icons-logistics-delivery-truck-in-movement:before { content: "\f105"; }
+.icons-dollar-coin-stack:before { content: "\f106"; }
+.icons-padlock:before { content: "\f107"; }
+.icons-menu-button-of-three-horizontal-lines:before { content: "\f108"; }
+.icons-whatsapp:before { content: "\f109"; }
+.icons-refresh:before { content: "\f10a"; }
+.icons-cancel:before { content: "\f10b"; }
+.icons-diamond-ring:before { content: "\f10c"; }
+.icons-jewel:before { content: "\f10d"; }
+.icons-necklace:before { content: "\f10e"; }
+.icons-hand:before { content: "\f10f"; }
+.icons-bracelet:before { content: "\f110"; }
+.icons-wedding-ring:before { content: "\f111"; }
+.icons-plus:before { content: "\f112"; }
+.icons-logo:before { content: "\f113"; }
+.icons-left-arrow:before { content: "\f114"; }
+.icons-right-arrow:before { content: "\f115"; }
+.icons-keychain:before { content: "\f116"; }
+    
+    $font-icons-search: "\f100";
+    $font-icons-cart: "\f101";
+    $font-icons-woman: "\f102";
+    $font-icons-male: "\f103";
+    $font-icons-pay: "\f104";
+    $font-icons-logistics-delivery-truck-in-movement: "\f105";
+    $font-icons-dollar-coin-stack: "\f106";
+    $font-icons-padlock: "\f107";
+    $font-icons-menu-button-of-three-horizontal-lines: "\f108";
+    $font-icons-whatsapp: "\f109";
+    $font-icons-refresh: "\f10a";
+    $font-icons-cancel: "\f10b";
+    $font-icons-diamond-ring: "\f10c";
+    $font-icons-jewel: "\f10d";
+    $font-icons-necklace: "\f10e";
+    $font-icons-hand: "\f10f";
+    $font-icons-bracelet: "\f110";
+    $font-icons-wedding-ring: "\f111";
+    $font-icons-plus: "\f112";
+    $font-icons-logo: "\f113";
+    $font-icons-left-arrow: "\f114";
+    $font-icons-right-arrow: "\f115";
+    $font-icons-keychain: "\f116";
