@@ -3175,6 +3175,9 @@ li {
 }
 
 @media only screen and (max-width: 991px) {
+  .page-wrapper {
+    margin: 0 auto;
+  }
   .main-header .search-box {
     display: none;
   }

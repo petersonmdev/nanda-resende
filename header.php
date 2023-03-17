@@ -147,7 +147,7 @@ $isMobile = (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberr
             <!-- Collect the nav links, forms, and other content for toggling -->
             <nav class="navbar navbar-expand-lg w-100">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="flaticon-menu-button-of-three-horizontal-lines"></i>
+                    <span class="material-symbols-outlined">menu</span>
                 </button>
                 <div class="logo logo-mobile d-md-block d-lg-none">
                     <figure>
@@ -157,15 +157,13 @@ $isMobile = (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberr
                     </figure>
                 </div>
                 <div class="d-md-block d-lg-none">
-                    <ul class="contact-info action-header">
-                        <li class="item d-inline">
-                            <a href="cart.php">
-                                <div class="icon-box icon-box-nandaresende-no-circle">
-                                    <span class="material-symbols-outlined">
-                                      shopping_cart
-                                    </span>
-                                    <i class="contador-cart">0</i>
-                                </div>
+                    <ul class="content-cart-mobile p-0 m-0">
+                        <li class="item d-inline item-icons-cart">
+                            <a href="<?php echo wc_get_cart_url(); ?>">
+                                <span class="material-symbols-outlined">
+                                  shopping_cart
+                                </span>
+                                <span id="mini-cart-count-mobile" class="contador-cart"></span>
                             </a>
                         </li>
                     </ul>
@@ -197,7 +195,7 @@ $isMobile = (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberr
                             <div class="input-group content-search">
                                 <input class="form-control inpt-nandaresende" type="text" name="s" placeholder="Faça sua busca..." aria-describedby="button-addon-mobile" value="<?php echo get_search_query() ?>">
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary btn-nandaresende" type="submit" id="button-addon-mobile"><i class="icons-search"></i></button>
+                                    <button class="btn btn-outline-secondary btn-nandaresende" type="submit" id="button-addon-mobile"><span class="material-symbols-outlined">search</span></button>
                                 </div>
                             </div>
                         </form>

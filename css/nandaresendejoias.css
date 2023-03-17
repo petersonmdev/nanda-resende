@@ -162,7 +162,6 @@ li.item.item-menu.item-menu-last-icons:before {
   width: 2px;
   background: #999;
   position: absolute;
-  left: -15px;
 }
 
 li.item.item-menu.item-menu-last-icons ul {
@@ -304,6 +303,11 @@ nav.navbar {
   background: none;
   border: none;
   padding: 0;
+  color: #752599;
+}
+
+.navbar.navbar-nandaresende button.navbar-toggler:focus {
+  outline: none;
 }
 
 .submenu-item:hover > .dropdown-menu {
@@ -2165,8 +2169,9 @@ table.shop_table.cart.woocommerce-cart-form__contents tr.woocommerce-cart-form__
     border-bottom: solid 2px #eee!important;
   }
   .navbar.navbar-nandaresende .navbar-collapse {
+    padding-top: 15px;
     margin-top: 15px;
-    background: #f9f9f9;
+    border-top: solid 2px #ddd;
   }
   .section.section-nandaresende {
     padding: 15px 0;
@@ -2628,41 +2633,6 @@ button.btn-nandaresende-cta:active {
   border-radius: 8px;
 }
 
-.header-uper .contact-info .item .icon-box,
-.navbar-nandaresende button.navbar-toggler {
-  position: relative;
-  width: 45px;
-  height: 45px;
-  line-height: 45px;
-  border-radius: 50%;
-  display: block;
-  margin-right: 7px;
-  text-align: center;
-}
-
-.navbar-nandaresende button.navbar-toggler {
-  background: #752566!important;
-}
-
-.navbar-nandaresende button.navbar-toggler:active,
-.navbar-nandaresende button.navbar-toggler:focus {
-  border: none;
-  box-shadow: none;
-  outline: none;
-}
-
-.navbar-nandaresende button.navbar-toggler i:before {
-  color: #fff;
-  text-align: center;
-  display: contents;
-}
-
-.header-uper .contact-info .item .icon-box i:before {
-  color: #5ec5cc;
-  font-size: 22px;
-}
-
-
 
 .header-uper .contact-info .item.item-menu strong {
   color: #752566;
@@ -2753,7 +2723,19 @@ button.btn-nandaresende-cta:active {
   position: relative;
 }
 
-.item-menu-last-icons .item-icons-cart .contador-cart {
+.content-cart-mobile {
+  padding-right: 10px!important;
+  position: relative;
+}
+
+.content-cart-mobile #mini-cart-count-mobile {
+  bottom: 0;
+  top: inherit;
+  right: 0;
+}
+
+.item-menu-last-icons .item-icons-cart .contador-cart,
+.content-cart-mobile .contador-cart {
   background: #752566;
   width: 20px;
   height: 20px;
