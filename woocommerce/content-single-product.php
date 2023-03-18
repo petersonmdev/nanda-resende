@@ -193,7 +193,7 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                         <div class="content-prices d-flex pb-2 pt-3">
                             <?php if ($woo_prices['type'] == 'variable') {
                                 if ($woo_prices['on_sale']) { ?>
-                                    <div class="last-price">R$<?php echo $woo_prices['regular_price'] ?></div>
+                                    <div class="last-price"><s>R$<?php echo $woo_prices['regular_price'] ?></s></div>
                                     <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
                                 <?php } else { ?>
                                     <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>

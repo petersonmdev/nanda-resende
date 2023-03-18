@@ -145,7 +145,7 @@ function nanda_resende_scripts() {
 
     wp_enqueue_script( 'nanda-resende-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '1.0', true );
     wp_enqueue_script( 'nanda-resende-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '1.0', true );
-
+    wp_enqueue_script( 'nanda-resende-autocomplete-address', get_template_directory_uri() . '/js/autocomplete-address.js', array('jquery'), '1.0', true );
     
     // wp_enqueue_script('woocommerce-ajax-add-to-cart', get_template_directory_uri() . '/js/ajax-add-to-cart.js', array('jquery'),'1.0' );
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

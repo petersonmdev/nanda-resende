@@ -100,6 +100,90 @@
 			}
 		}
 	});
+
+	$(function() {
+		var $searchOverlay = $(".search-overlay");
+		var $search = $(".search");
+		var $clone, offsetX, offsetY;
+		var $form = $("#searchForm");
+
+		$search.on("click", function() {
+			var $original = $(this);
+			$clone = $(this).clone(true);
+
+			$searchOverlay.addClass("s--active");
+
+			$clone.addClass("s--cloned s--hidden");
+			$searchOverlay.append($clone);
+
+			var triggerLayout = $searchOverlay.offset().top;
+
+			var originalRect = $original[0].getBoundingClientRect();
+			var cloneRect = $clone[0].getBoundingClientRect();
+
+			offsetX = originalRect.left - cloneRect.left;
+			offsetY = originalRect.top - cloneRect.top;
+
+			$clone.css("transform", "translate("+ offsetX +"px, "+ offsetY +"px)");
+			$original.addClass("s--hidden");
+			$clone.removeClass("s--hidden");
+
+			var triggerLayout = $searchOverlay.offset().top;
+
+			$clone.addClass("s--moving");
+
+			$clone.attr("style", "");
+
+			$clone.on("transitionend", openAfterMove);
+		});
+
+		function openAfterMove() {
+			$clone.addClass("s--active");
+			$clone.find("input").focus();
+
+			addCloseHandler($clone);
+			$clone.off("transitionend", openAfterMove);
+		};
+
+		function addCloseHandler($parent) {
+			var $closeBtn = $parent.find(".search__close");
+			$closeBtn.on("click", closeHandler);
+		};
+
+		/* close handler functions */
+		function closeHandler(e) {
+			$clone.removeClass("s--active");
+			e.stopPropagation();
+
+			var $cloneBg = $clone.find(".search__bg");
+
+			$cloneBg.on("transitionend", moveAfterClose);
+		};
+
+		function moveAfterClose(e) {
+			e.stopPropagation(); // prevents from double transitionend even fire on parent $clone
+
+			$clone.addClass("s--moving");
+			$clone.css("transform", "translate("+ offsetX +"px, "+ offsetY +"px)");
+			$clone.on("transitionend", terminateSearch);
+		};
+
+		function terminateSearch(e) {
+			$search.removeClass("s--hidden");
+			$clone.remove();
+			$searchOverlay.removeClass("s--active");
+		};
+
+		$('#searchForm').submit(function(event) {
+			event.preventDefault();
+			var actionUrl = $(this).attr('action');
+			var formData = $(this).serialize();
+
+			$.post(actionUrl, formData, function(data) {
+				$(document.body).html(data);
+			});
+		});
+	});
 	
 	//1.Hide Loading Box (Preloader)
 	function handlePreloader() {

@@ -112,11 +112,21 @@ $isMobile = (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberr
                   <li class="item item-menu item-menu-last-icons">
                       <ul class="d-flex">
                           <li class="item item-icons-search">
-                              <a href="#">
-                                  <span class="material-symbols-outlined">
-                                      search
-                                  </span>
-                              </a>
+                              <div class="search-overlay"></div>
+                              <div class="scroll-cont">
+                                  <div class="content">
+                                      <div class="search_desk">
+                                          <div class="search__bg"></div>
+                                          <div class="search__box">
+                                              <form id="searchForm" action="<?php echo get_site_url(); ?>" method="get" role="search" class="woocommerce-product-search">
+                                                  <input type="text" class="search__input" name="s" placeholder="Faça sua busca..." value="<?php echo get_search_query() ?>" />
+                                              </form>
+                                              <div class="search__line"></div>
+                                              <div class="search__close"></div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
                           </li>
                           <li class="item item-icons-cart">
                               <a href="<?php echo wc_get_cart_url(); ?>">
