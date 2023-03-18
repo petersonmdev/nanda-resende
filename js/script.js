@@ -103,7 +103,7 @@
 
 	$(function() {
 		var $searchOverlay = $(".search-overlay");
-		var $search = $(".search");
+		var $search = $(".search_desk");
 		var $clone, offsetX, offsetY;
 		var $form = $("#searchForm");
 

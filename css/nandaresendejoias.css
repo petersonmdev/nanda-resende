@@ -2340,7 +2340,7 @@ input.inpt-nandaresende {
   border-radius: 5px;
 }
 
-/* search overlay */
+/* search overlay desktop */
 
 .search-overlay *, .search-overlay *:before, .search-overlay *:after {
   box-sizing: border-box;
@@ -2382,13 +2382,13 @@ input.inpt-nandaresende {
   height: 15px;
   perspective: 1000px;
 }
-.search:not(.s--active) {
+.search_desk:not(.s--active) {
   cursor: pointer;
 }
-.search.s--hidden {
+.search_desk.s--hidden {
   opacity: 0;
 }
-.search.s--cloned {
+.search_desk.s--cloned {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -2399,7 +2399,7 @@ input.inpt-nandaresende {
   margin-right: 0;
   margin-bottom: 0;
 }
-.search.s--moving {
+.search_desk.s--moving {
   transition: transform 0.4s cubic-bezier(0.56, -0.49, 0.58, 0.9);
 }
 .search__bg {
@@ -2414,7 +2414,7 @@ input.inpt-nandaresende {
   transform: translate3d(-50%, -50%, 0);
   will-change: transform;
 }
-.search.s--active .search__bg {
+.search_desk.s--active .search__bg {
   transform: translate3d(-50%, -50%, 0) scale(371.2);
 }
 .search__box {
@@ -2428,7 +2428,7 @@ input.inpt-nandaresende {
   transform: translate(-50%, -50%);
   transition: all 0.45s ease;
 }
-.search.s--active .search__box {
+.search_desk.s--active .search__box {
   width: 510px;
   height: 100px;
   border-radius: 50px;
@@ -2449,7 +2449,7 @@ input.inpt-nandaresende {
 .search__input::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
-.search.s--active .search__input {
+.search_desk.s--active .search__input {
   padding: 24.5px 90px 24.5px 40px;
   opacity: 1;
   transition: opacity 0.18s 0.48s;
@@ -2479,11 +2479,11 @@ input.inpt-nandaresende {
   opacity: 0;
   transition: opacity 0.3s;
 }
-.search.s--active .search__line:before {
+.search_desk.s--active .search__line:before {
   opacity: 1;
   transition: opacity 0.3s 0.42s;
 }
-.search.s--active .search__line {
+.search_desk.s--active .search__line {
   width: 36px;
   height: 6px;
   transform: translate(180px, 11px) rotate(-45deg);
@@ -2496,13 +2496,14 @@ input.inpt-nandaresende {
   height: 30px;
   pointer-events: none;
 }
-.search.s--active .search__close {
+.search_desk.s--active .search__close {
   right: 44px;
   top: 34.5px;
   pointer-events: auto;
   cursor: pointer;
 }
 
+/* fim search overlay desktop */
 
 
 .content-search input.inpt-nandaresende {
