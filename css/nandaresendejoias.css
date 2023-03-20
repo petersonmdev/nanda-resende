@@ -1666,10 +1666,14 @@ form.variations_form .price ins {
 .woocommerce-MyAccount-navigation ul {
   display: flex;
   padding: 0;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   padding: 15px 0 0;
   margin-bottom: 35px;
   border-bottom: solid 1px #707070;
+}
+
+.woocommerce table.my_account_orders .button:not(.invoice) {
+  margin-right: 5px;
 }
 
 .woocommerce-MyAccount-content {
@@ -1686,7 +1690,7 @@ form.variations_form .price ins {
 }
 
 .woocommerce-MyAccount-navigation ul li {
-  padding-bottom: 25px;
+  padding: 0 20px 20px;
 }
 
 .woocommerce-MyAccount-navigation ul li.is-active {
