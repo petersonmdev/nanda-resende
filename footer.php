@@ -62,8 +62,8 @@
                             <img src="<?php echo img; ?>/icons/payment-method.png" alt="cartões aceitos">
                         </div>
                         <div class="content-middle-footer content-middle-footer mt-5 pt-4">
-                            <h6 class="title-footer-top">Horário de funcionamento</h6>
-                            <p>De segunda a Quinta, das 7h as 17h, sexta-feira, das 7h as 16h</p>
+                            <h6 class="title-footer-top">Funcionamento</h6>
+                            <p>De segunda a Quinta, das 7h as 17h. Sexta-feira, das 7h as 16h</p>
                         </div>
                     </div>
                     <div class="col-lg-1 d-lg-block d-md-none mb-4"></div>
