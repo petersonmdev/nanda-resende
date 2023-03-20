@@ -1182,6 +1182,9 @@ p.no-comments {
 
 /* Produto simples */
 
+.product-post p {
+  color: #000;
+}
 
 
 .product-post-title {
@@ -1486,7 +1489,10 @@ form.variations_form .price ins {
 }
 
 .seal-variation-sale {
-  color: green;
+  color: #fff;
+  background: #00720B;
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
 .modal-add-cart .woocommerce-variation-price {
@@ -2537,6 +2543,20 @@ section.section-nandaresende {
 .section-title {
   font-family: 'DM Sans', sans-serif;
   color: #752566;
+}
+
+.content-post-nandaresende {
+  max-width: 769px;
+  margin: 0 auto;
+}
+
+.content-post-nandaresende p {
+  color: #000;
+}
+
+.title-nandaresende {
+  color: #752599;
+  padding: 25px 15px 35px;
 }
 
 .subtitle-nandaresende {

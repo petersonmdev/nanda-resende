@@ -119,7 +119,7 @@ $isMobile = (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberr
                                           <div class="search__bg"></div>
                                           <div class="search__box">
                                               <form id="searchForm" action="<?php echo get_site_url(); ?>" method="get" role="search" class="woocommerce-product-search">
-                                                  <input type="text" class="search__input" name="s" placeholder="Faça sua busca..." value="<?php echo get_search_query() ?>" />
+                                                  <input type="text" class="search__input" name="s" placeholder="Faça sua busca..." />
                                               </form>
                                               <div class="search__line"></div>
                                               <div class="search__close"></div>
