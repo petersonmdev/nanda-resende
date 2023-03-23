@@ -774,6 +774,8 @@ outline: none!important;
   min-width: 100%;
   object-fit: cover;
   object-position: center;
+  max-height: 200px;
+  min-height: 200px;
 }
 
 .section-products-featured .category-name,
@@ -2547,11 +2549,6 @@ section.section-nandaresende {
 .section-title {
   font-family: 'DM Sans', sans-serif;
   color: #752566;
-}
-
-.content-post-nandaresende {
-  max-width: 769px;
-  margin: 0 auto;
 }
 
 .content-post-nandaresende p {
