@@ -123,6 +123,7 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                             } else { ?>
                                 <h1 class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></h1>
                             <?php } ?>
+                            <span class="d-block pt-3"><?php the_excerpt(); ?></span>
                         </div>
                     </div>
                     <?php do_action('woocommerce_before_add_to_cart_button'); ?>
