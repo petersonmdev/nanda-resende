@@ -48,7 +48,7 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                 <ul class="list-unstyled nav nav-tabs" id="myTab" role="tablist">
                     <li class="d-block nav-item" data-target="#productSimple" data-slide-to="0">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#img0" role="tab" aria-controls="img0" aria-selected="true">
-                            <img src="<?php echo get_the_post_thumbnail_url() ?>" alt="images" class="img-responsive img-product">
+                            <img src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="images" class="img-responsive img-product">
                         </a>
                     </li>
                     <?php
@@ -57,6 +57,7 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                         foreach( $gallery_ids as $gallery_id ) {
                             $image_link = wp_get_attachment_url( $gallery_id );
                         ?>
+
                             <li class="d-block nav-item" data-target="#productSimple" data-slide-to="<?php echo$i?>">
                                 <a class="nav-link" id="home-tab" data-toggle="tab" href="#img<?php echo$i?>" role="tab" aria-controls="img<?php echo$i?>" aria-selected="true">
                                     <img src="<?php echo$image_link?>" alt="images" class="img-responsive img-product">
@@ -76,7 +77,7 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                     <div class="carousel-inner tab-content">
                         <div class="carousel-item tab-pane active" id="img0">
                             <figure class="zoom d-block w-100" style="background-image: url(<?php echo get_the_post_thumbnail_url() ?>)">
-                                <img src="<?php echo get_the_post_thumbnail_url() ?>" alt="img0">
+                                <img src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/600x600&text=@nandaresendejoias' ?>" alt="img0">
                             </figure>
                         </div>
                         <?php $i=1; foreach( $gallery_ids as $gallery_id ) :
@@ -120,9 +121,7 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                                 <?php } ?>
                                 <?php
                             } else { ?>
-                                <?= ($the_product['on_sale']) ? '<span class="seal-variation-sale">Produto em promoção</span>' : '' ?>
-                                <h3 class="last-price"><s>R$<?php echo number_format($the_product['regular_price'], 2, ',', ''); ?></s></h3>
-                                <h1 class="price">R$<?php echo number_format($the_product['sale_price'], 2, ',', ''); ?></h1>
+                                <h1 class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></h1>
                             <?php } ?>
                         </div>
                     </div>
@@ -184,22 +183,16 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                         if ($woo_prices['on_sale']) { ?>
                             <span class="badge-sale">Promoção</span>
                         <?php } ?>
-                        <img class="img-product img-responsive" src="<?php echo get_the_post_thumbnail_url() ?>" alt="Imagem do Produto">
+                        <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                         <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
                     </div>
                     <div class="category-name py-2"><?php echo $product->get_categories(); ?></div>
                     <a href="<?php the_permalink(); ?>">
                         <div class="product-name pt-2"><?php the_title() ?></div>
                         <div class="content-prices d-flex pb-2 pt-3">
-                            <?php if ($woo_prices['type'] == 'variable') {
-                                if ($woo_prices['on_sale']) { ?>
-                                    <div class="last-price"><s>R$<?php echo $woo_prices['regular_price'] ?></s></div>
-                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
-                                <?php } else { ?>
-                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
-                                <?php } ?>
-                                <?php
-                            } else { ?>
+                            <?php if ($woo_prices['type'] == 'variable') { ?>
+                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                            <?php } else { ?>
                                 <?php if ($woo_prices['on_sale']) { ?>
                                     <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
                                     <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>

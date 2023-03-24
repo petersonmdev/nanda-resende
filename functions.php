@@ -687,6 +687,50 @@ add_theme_support( 'woocommerce', array(
     'single_image_width' => 500,
 ) );
 
+// Preço de Produto variável
+
+add_shortcode( 'product_price', 'display_formatted_product_price' );
+function display_formatted_product_price( $atts ) {
+    extract(shortcode_atts( array(
+        'id' => null
+    ), $atts, 'product_price' ) );
+
+    global $product;
+
+    if( ! empty($id) || ! is_a($product, 'WC_Product') ) {
+        $product = wc_get_product( empty($id) ? get_the_id() : $id );
+    }
+
+    $price_html = $product->get_price_html();
+
+    // Others product types than variable
+    if ( ! $product->is_type('variable') ) {
+        return '<span class="product-price">' . $price_html . '</span>';
+    }
+    // For variable products
+    else {
+        ob_start();
+
+        ?>
+        <script type="text/javascript">
+        jQuery( function($){
+            var p = '<?php echo $price_html; ?>', s = 'span.product-price';
+
+            $( 'form.variations_form.cart' ).on('show_variation', function(event, data) {
+                $(s).html(data.price_html); // Display the selected variation price
+            });
+
+            $( 'form.variations_form.cart' ).on('hide_variation', function() {
+                $(s).html(p); // Display the variable product price range
+            });
+        });
+        </script>
+        <?php
+
+        return ob_get_clean() . '<span class="product-price">' . $price_html . '</span>';
+    }
+}
+
 /**
  * @description   Funções responsaveis por remover os respectivos campos, cidade e estado, para o calculo de frete
  * @author        Peterson Macedo

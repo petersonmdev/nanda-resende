@@ -829,6 +829,21 @@ outline: none!important;
   font-weight: 500;
 }
 
+.section-products-featured .price.price-variation,
+.section-plus-sale .price.price-variation,
+.section-products .price.price-variation,
+.section-product-sugestion .price.price-variation {
+  font-size: 1em;
+  letter-spacing: 0!important;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 24px;
+}
+
+.product .price.price-variation {
+  padding-bottom: 0!important;
+}
+
 .section-products-featured .installment-price,
 .section-plus-sale .installment-price,
 .section-products .installment-price,
@@ -1345,6 +1360,11 @@ p.no-comments {
   color: #752566;
 }
 
+.content-price-product .price.price-variation {
+  font-size: 1.5em;
+  color: #752566;
+}
+
 .content-price-product .installment-price {
   font-weight: 400;
 }
@@ -1676,11 +1696,6 @@ form.variations_form .price ins {
 
 .woocommerce table.my_account_orders .button:not(.invoice) {
   margin-right: 5px;
-}
-
-.woocommerce-MyAccount-content {
-  max-width: 750px;
-  margin: 0 auto;
 }
 
 .woocommerce-MyAccount-content .woocommerce-EditAccountForm .form-row {

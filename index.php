@@ -79,68 +79,64 @@ get_header();
         </div>
       </div>
       <div class="d-none d-lg-flex">
-        <?php
-        $meta_query  = WC()->query->get_meta_query();
-        $tax_query   = WC()->query->get_tax_query();
-        $tax_query[] = array(
-            'taxonomy' => 'product_visibility',
-            'field'    => 'name',
-            'terms'    => 'featured',
-            'operator' => 'IN',
-        );
+            <?php
+            $meta_query  = WC()->query->get_meta_query();
+            $tax_query   = WC()->query->get_tax_query();
+            $tax_query[] = array(
+                'taxonomy' => 'product_visibility',
+                'field'    => 'name',
+                'terms'    => 'featured',
+                'operator' => 'IN',
+            );
 
-        $params = array(
-            'post_type'           => 'product',
-            'post_status'         => 'publish',
-            'showposts'           => 4,
-            'ignore_sticky_posts' => 1,
-            'posts_per_page'      => $atts['per_page'],
-            'orderby'             => 'rand',
-            'order'               => $atts['order'],
-            'meta_query'          => $meta_query,
-            'tax_query'           => $tax_query,
-        );
-        $wc_query = new WP_Query($params); ?>
-        <?php if ($wc_query->have_posts()) : ?>
-          <?php while ($wc_query->have_posts()) :
-            $wc_query->the_post();
-            $product = wc_get_product(get_the_ID()); ?>
-            <div class="col-3 product mb-5">
-                <div class="content-img-product">
-                    <?php $woo_prices = woocommerce_prices($product);
-                    if ($woo_prices['on_sale']) { ?>
-                        <span class="badge-sale">Promoção</span>
-                    <?php } ?>
-                    <img class="img-product img-responsive" src="<?php echo get_the_post_thumbnail_url() ?>" alt="Imagem do Produto">
-                    <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
-                </div>
-                <div class="category-name py-2"><?php echo $product->get_categories(); ?></div>
-                <a href="<?php the_permalink(); ?>">
-                    <div class="product-name pt-2"><?php the_title() ?></div>
-                    <div class="content-prices d-flex pb-2 pt-3">
-                        <?php if ($woo_prices['type'] == 'variable') {
-                            if ($woo_prices['on_sale']) { ?>
-                                <div class="last-price"><s>R$<?php echo $woo_prices['regular_price'] ?></s></div>
-                                <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
-                            <?php } else { ?>
-                                <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
-                            <?php } ?>
-                            <?php
-                        } else { ?>
-                            <?php if ($woo_prices['on_sale']) { ?>
-                                <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
-                                <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
-                            <?php } else { ?>
-                                <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
-                            <?php } ?>
+            $params = array(
+                'post_type'           => 'product',
+                'post_status'         => 'publish',
+                'showposts'           => 4,
+                'ignore_sticky_posts' => 1,
+                'posts_per_page'      => $atts['per_page'],
+                'orderby'             => 'rand',
+                'order'               => $atts['order'],
+                'meta_query'          => $meta_query,
+                'tax_query'           => $tax_query,
+            );
+            $wc_query = new WP_Query($params); ?>
+            <?php if ($wc_query->have_posts()) : ?>
+              <?php while ($wc_query->have_posts()) :
+                $wc_query->the_post();
+                $product = wc_get_product(get_the_ID()); ?>
+
+                <div class="col-3 product mb-5">
+                    <div class="content-img-product">
+                        <?php $woo_prices = woocommerce_prices($product);
+                        if ($woo_prices['on_sale']) { ?>
+                            <span class="badge-sale">Promoção</span>
                         <?php } ?>
+                        <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
+                        <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
                     </div>
-                </a>
-                <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
-            </div>
-          <?php endwhile; ?>
-          <?php wp_reset_postdata(); ?>
-        <?php endif; ?>
+                    <div class="category-name py-2"><?php echo $product->get_categories(); ?></div>
+                    <a href="<?php the_permalink(); ?>">
+                        <div class="product-name pt-2"><?php the_title() ?></div>
+                        <div class="content-prices d-flex pb-2 pt-3">
+                            <?php if ($woo_prices['type'] == 'variable') { ?>
+                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                            <?php } else { ?>
+                                <?php if ($woo_prices['on_sale']) { ?>
+                                    <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
+                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
+                                <?php } else { ?>
+                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
+                                <?php } ?>
+                            <?php } ?>
+                        </div>
+                    </a>
+                    <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
+                </div>
+              <?php endwhile; ?>
+              <?php wp_reset_postdata(); ?>
+            <?php endif; ?>
+          </div>
       </div>
       <div class="d-md-block col-md-12 d-lg-none carousel-mobile-nandaresende">
         <div id="destaques" class="owl-carousel owl-theme owl-loaded owl-drag">
@@ -176,22 +172,16 @@ get_header();
                         if ($woo_prices['on_sale']) { ?>
                             <span class="badge-sale">Promoção</span>
                         <?php } ?>
-                        <img class="img-product img-responsive" src="<?php echo get_the_post_thumbnail_url() ?>" alt="Imagem do Produto">
+                        <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                         <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
                     </div>
                     <div class="category-name py-2"><?php echo $product->get_categories(); ?></div>
                     <a href="<?php the_permalink(); ?>">
                         <div class="product-name pt-2"><?php the_title() ?></div>
                         <div class="content-prices d-flex pb-2 pt-3">
-                            <?php if ($woo_prices['type'] == 'variable') {
-                                if ($woo_prices['on_sale']) { ?>
-                                    <div class="last-price"><s>R$<?php echo $woo_prices['regular_price'] ?></s></div>
-                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
-                                <?php } else { ?>
-                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
-                                <?php } ?>
-                                <?php
-                            } else { ?>
+                            <?php if ($woo_prices['type'] == 'variable') { ?>
+                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                            <?php } else { ?>
                                 <?php if ($woo_prices['on_sale']) { ?>
                                     <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
                                     <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
@@ -234,22 +224,16 @@ get_header();
                     if ($woo_prices['on_sale']) { ?>
                         <span class="badge-sale">Promoção</span>
                     <?php } ?>
-                    <img class="img-product img-responsive" src="<?php echo get_the_post_thumbnail_url() ?>" alt="Imagem do Produto">
+                    <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                     <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
                 </div>
                 <div class="category-name py-2"><?php echo $product->get_categories(); ?></div>
                 <a href="<?php the_permalink(); ?>">
                     <div class="product-name pt-2"><?php the_title() ?></div>
                     <div class="content-prices d-flex pb-2 pt-3">
-                        <?php if ($woo_prices['type'] == 'variable') {
-                            if ($woo_prices['on_sale']) { ?>
-                                <div class="last-price"><s>R$<?php echo $woo_prices['regular_price'] ?></s></div>
-                                <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
-                            <?php } else { ?>
-                                <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
-                            <?php } ?>
-                            <?php
-                        } else { ?>
+                        <?php if ($woo_prices['type'] == 'variable') { ?>
+                            <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                        <?php } else { ?>
                             <?php if ($woo_prices['on_sale']) { ?>
                                 <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
                                 <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
@@ -280,22 +264,16 @@ get_header();
                         if ($woo_prices['on_sale']) { ?>
                             <span class="badge-sale">Promoção</span>
                         <?php } ?>
-                        <img class="img-product img-responsive" src="<?php echo get_the_post_thumbnail_url() ?>" alt="Imagem do Produto">
+                        <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                         <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
                     </div>
                     <div class="category-name py-2"><?php echo $product->get_categories(); ?></div>
                     <a href="<?php the_permalink(); ?>">
                         <div class="product-name pt-2"><?php the_title() ?></div>
                         <div class="content-prices d-flex pb-2 pt-3">
-                            <?php if ($woo_prices['type'] == 'variable') {
-                                if ($woo_prices['on_sale']) { ?>
-                                    <div class="last-price"><s>R$<?php echo $woo_prices['regular_price'] ?></s></div>
-                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
-                                <?php } else { ?>
-                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
-                                <?php } ?>
-                                <?php
-                            } else { ?>
+                            <?php if ($woo_prices['type'] == 'variable') { ?>
+                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                            <?php } else { ?>
                                 <?php if ($woo_prices['on_sale']) { ?>
                                     <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
                                     <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
@@ -348,22 +326,16 @@ get_header();
                     if ($woo_prices['on_sale']) { ?>
                         <span class="badge-sale">Promoção</span>
                     <?php } ?>
-                    <img class="img-product img-responsive" src="<?php echo get_the_post_thumbnail_url() ?>" alt="Imagem do Produto">
+                    <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                     <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
                 </div>
                 <div class="category-name py-2"><?php echo $product->get_categories(); ?></div>
                 <a href="<?php the_permalink(); ?>">
                     <div class="product-name pt-2"><?php the_title() ?></div>
                     <div class="content-prices d-flex pb-2 pt-3">
-                        <?php if ($woo_prices['type'] == 'variable') {
-                            if ($woo_prices['on_sale']) { ?>
-                                <div class="last-price"><s>R$<?php echo $woo_prices['regular_price'] ?></s></div>
-                                <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
-                            <?php } else { ?>
-                                <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
-                            <?php } ?>
-                            <?php
-                        } else { ?>
+                        <?php if ($woo_prices['type'] == 'variable') { ?>
+                            <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                        <?php } else { ?>
                             <?php if ($woo_prices['on_sale']) { ?>
                                 <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
                                 <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
@@ -394,22 +366,16 @@ get_header();
                         if ($woo_prices['on_sale']) { ?>
                             <span class="badge-sale">Promoção</span>
                         <?php } ?>
-                        <img class="img-product img-responsive" src="<?php echo get_the_post_thumbnail_url() ?>" alt="Imagem do Produto">
+                        <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                         <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
                     </div>
                     <div class="category-name py-2"><?php echo $product->get_categories(); ?></div>
                     <a href="<?php the_permalink(); ?>">
                         <div class="product-name pt-2"><?php the_title() ?></div>
                         <div class="content-prices d-flex pb-2 pt-3">
-                            <?php if ($woo_prices['type'] == 'variable') {
-                                if ($woo_prices['on_sale']) { ?>
-                                    <div class="last-price"><s>R$<?php echo $woo_prices['regular_price'] ?></s></div>
-                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
-                                <?php } else { ?>
-                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
-                                <?php } ?>
-                                <?php
-                            } else { ?>
+                            <?php if ($woo_prices['type'] == 'variable') { ?>
+                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                            <?php } else { ?>
                                 <?php if ($woo_prices['on_sale']) { ?>
                                     <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
                                     <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
