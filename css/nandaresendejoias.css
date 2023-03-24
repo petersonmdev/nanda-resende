@@ -6150,6 +6150,13 @@ button.btn-nandaresende-cta:active {
   .feature-section .contact-info .icon-box {
     left: 10px !important;
   }
+  .section-products-featured .price.price-variation,
+  .section-plus-sale .price.price-variation,
+  .section-products .price.price-variation,
+  .section-product-sugestion .price.price-variation {
+    font-size: 0.9em;
+    line-height: 1;
+  }
 }
 
 /*# sourceMappingURL=maps/style.css.map */
