@@ -307,7 +307,9 @@ get_header();
         $params = array(
           'posts_per_page' => 4,
           'post_type' => 'product',
-          'orderby' => 'rand',
+          'meta_key'  	=> 'total_sales',
+          'orderby'   	=> 'meta_value_num',
+          'order' 		=> 'desc',
           'meta_query' => array(
             array(
                 'key' => '_stock_status',
@@ -354,7 +356,13 @@ get_header();
       <div class="d-md-block col-md-12 d-lg-none carousel-mobile-nandaresende">
         <div id="maisvistos" class="owl-carousel owl-theme owl-loaded owl-drag">
           <?php
-          $params = array('posts_per_page' => 15, 'post_type' => 'product', 'orderby' => 'asc');
+          $params = array(
+              'posts_per_page' => 15,
+              'post_type' => 'product',
+              'meta_key'  	=> 'total_sales',
+              'orderby'   	=> 'meta_value_num',
+              'order' 		=> 'desc'
+          );
           $wc_query = new WP_Query($params);
           while ($wc_query->have_posts()) :
             $wc_query->the_post();

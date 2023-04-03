@@ -172,7 +172,13 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
       <div class="d-lg-block col-md-12 carousel-mobile-nandaresende">
         <div id="interesse" class="owl-carousel owl-theme owl-loaded owl-drag">
           <?php
-          $params = array('posts_per_page' => 15, 'post_type' => 'product', 'orderby' => 'asc');
+          $params = array(
+              'posts_per_page' => 15,
+              'post_type' => 'product',
+              'meta_key' => 'total_sales',
+              'orderby'   	=> 'meta_value_num',
+              'order' 		=> 'desc'
+          );
           $wc_query = new WP_Query($params);
           while( $wc_query->have_posts() ) : 
             $wc_query->the_post();

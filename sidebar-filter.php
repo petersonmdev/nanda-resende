@@ -12,13 +12,22 @@ $search_filter = false;
 $has_filter = false;
 $filter = [];
 
-if( $_POST['has-filter'] == 'true' ){
+if( !empty($_GET['categoria']) ){
+    $search_filter = true;
+    $has_filter = true;
+    $filter['category'] = $_GET['categoria'];
+    $product_cat = $filter['category'];
+}
+
+if( $_POST['has-filter'] == 'true' || is_product_category()){
     $has_filter = true;
 
 	if(!empty($_POST['cat-filter'])){
 		$filter['category'] = $_POST['cat-filter'];
 		$product_cat = $filter['category'];
-	}else{
+	} else if(get_query_var( 'term' )){
+        $product_cat = get_query_var( 'term' );
+    } else {
 		$product_cat = null;
 	}
 
@@ -35,7 +44,7 @@ if( $_POST['has-filter'] == 'true' ){
 <aside class="col-3 d-lg-block d-none filter-sidebar filter-nandaresende">
 	<form name="form-filter" id="form-filter" action="<?php echo esc_url(home_url('/loja')); ?>" method="post">
 		<div class="content-filter-nandaresende <?php echo ($product_cat || $price_filter) ? 'filtro-ativado' : '' ?>">
-		  <?php if ($product_cat || $price_filter) { ?>
+		  <?php if ($product_cat || $price_filter || is_product_category()) { ?>
 			<span class="text-center p-2 txt-filter-active">filtro ativado</span>
 		  <?php } ?>
 		  <div class="section-title text-center mt-3 mb-3">
@@ -84,38 +93,3 @@ if( $_POST['has-filter'] == 'true' ){
 		</div>
 	</form>
 </aside>
-
-<script type="text/javascript">
-	var slider = document.getElementById("filterPrice");
-	var output = document.getElementById("valuePriceFilter");
-	output.innerHTML = slider.value;
-
-	slider.oninput = function() {
-	output.innerHTML = this.value;
-	};
-
-
-	jQuery(document).ready(function(){
-		$(".cat-filter").click(function(e){
-            e.preventDefault();
-            $("#cat-filter li > a").removeClass("active");
-            $(this).addClass("active");
-            var category = $(this).attr('data-selected');
-            $("input[name=cat-filter]").val(category);
-
-            $("#form-filter").submit();
-		});
-		$(".color-filter").click(function(e){
-            e.preventDefault();
-            $("#color-filter li > a").removeClass("active");
-            $(this).addClass("active");
-            var color = $(this).attr('data-selected');
-            $("input[name=color-filter]").val(color);
-
-            $("#form-filter").submit();
-		});
-		$("#filterPrice").change(function(event) {
-		    $("#form-filter").submit();
-		});
-	});
-</script>

@@ -38,6 +38,9 @@ if( !empty($_GET['categoria']) ){
 if( $_POST['has-filter'] == 'true' ){
     $has_filter = true;
 
+    if(!empty($_POST['busca']))
+        $filter['s'] = $_POST['busca'];
+
     if(!empty($_POST['cat-filter'])){
         $filter['category'] = $_POST['cat-filter'];
         $product_cat = $filter['category'];
@@ -59,7 +62,10 @@ $args = array(
     'post_type' => 'product',
     'post_status' => 'publish',
     'posts_per_page' => 9,
-    'paged' => $paged
+    'paged' => $paged,
+    'meta_key'  	=> 'total_sales',
+    'orderby'   	=> 'meta_value_num',
+    'order' 		=> 'desc',
 );
 
 if (!empty($product_cat)) {
@@ -69,6 +75,16 @@ if (!empty($product_cat)) {
             'taxonomy' => 'product_cat',
             'field' => 'slug',
             'terms' => $product_cat
+        )
+    );
+}
+
+if (is_product_category() || is_product_tag()) {
+    $args['tax_query'] = array(
+        array(
+            'taxonomy' => get_query_var( 'taxonomy' ),
+            'field' => 'slug',
+            'terms' => get_query_var( 'term' ),
         )
     );
 }
@@ -105,19 +121,33 @@ if (!empty($price_filter)) {
 
 ?>
 
+<?php if ( is_product_category() ) { ?>
+    <section class="section section-nandaresende pb-2 pt-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                    <div class="section-title text-center">
+                        <h3><?php woocommerce_page_title(); ?></h3>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<?php } ?>
+
 <!--Main container -->
 <section class="section section-nandaresende section-main-container section-products">
     <main role="main" class="container">
         <div class="row">
             <?php get_sidebar( 'filter' ); ?>
 
-            <div class="col-lg-8 col-md-12 container-main container-main-nandaresende">
+            <div class="col-lg-9 col-md-12 container-main container-main-nandaresende">
                 <div class="content-all-products">
                     <div class="row align-items-center">
+                        <?php $wc_query = new WP_Query($args);
 
-                        <?php $wc_query = new WP_Query($args); ?>
-
-                        <?php if ( $wc_query->have_posts() ) : ?>
+                        if ( $wc_query->have_posts() ) : ?>
                             <?php while ( $wc_query->have_posts() ) :
                                 $wc_query->the_post();
                                 $product = wc_get_product( get_the_ID() ); ?>
@@ -169,40 +199,6 @@ if (!empty($price_filter)) {
     </main>
     <!--End Main container -->
 </section>
-
-<script type="text/javascript">
-    var slider = document.getElementById("filterPrice");
-    var output = document.getElementById("valuePriceFilter");
-    output.innerHTML = slider.value;
-
-    slider.oninput = function() {
-        output.innerHTML = this.value;
-    };
-
-    jQuery(document).ready(function(){
-        $(".cat-filter").click(function(e){
-            e.preventDefault();
-            $("#cat-filter li > a").removeClass("active");
-            $(this).addClass("active");
-            var category = $(this).attr('data-selected');
-            $("input[name=cat-filter]").val(category);
-
-            $("#form-filter").submit();
-        });
-        $(".color-filter").click(function(e){
-            e.preventDefault();
-            $("#color-filter li > a").removeClass("active");
-            $(this).addClass("active");
-            var color = $(this).attr('data-selected');
-            $("input[name=color-filter]").val(color);
-
-            $("#form-filter").submit();
-        });
-        $("#filterPrice").change(function(event) {
-            $("#form-filter").submit();
-        });
-    });
-</script>
 
 <?php get_footer(); ?>
 

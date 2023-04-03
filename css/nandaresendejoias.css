@@ -503,8 +503,8 @@ ol.list-filter-nandaresende li a.active {
 .content-filter-nandaresende .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 4px;
-  height: 20px;
+  width: 8px;
+  height: 25px;
   background: #752566;
   cursor: pointer;
   z-index: 2;
@@ -538,6 +538,12 @@ ol.list-filter-nandaresende li a.active {
 #reset-filter button:focus {
   outline: 0;
   box-shadow:none!important;
+}
+
+#valuePriceFilter {
+  font-weight: 700;
+  color: #752566;
+  font-size: 1.8em;
 }
 
   /* Fim Aside */
@@ -808,16 +814,18 @@ outline: none!important;
 .section-plus-sale .content-prices,
 .section-products .content-prices,
 .section-product-sugestion .content-prices {
-  justify-content: flex-start;
+  justify-content: space-between;
+  vertical-align: middle;
+  align-items: center;
 }
+
+
 
 .section-products-featured .last-price,
 .section-plus-sale .last-price,
 .section-products .last-price,
 .section-product-sugestion .last-price {
   color: #D82700;
-  font-size: 1.2em;
-  margin-right: 15px;
 }
 
 .section-products-featured .price,
@@ -840,8 +848,18 @@ outline: none!important;
   padding-bottom: 24px;
 }
 
+.price.price-variation ins {
+  text-decoration: none!important;
+}
+
 .product .price.price-variation {
   padding-bottom: 0!important;
+  width: 100%;
+}
+
+.product .price.price-variation .product-price {
+  justify-content: space-between;
+  display: flex!important;
 }
 
 .section-products-featured .installment-price,
@@ -1537,9 +1555,9 @@ form.variations_form .price ins {
   text-align: center;
   margin: 0;
   padding: 0;
-  border: none;
+  border: none!important;
   background: #ededed;
-  border-radius: 5px;
+  border-radius: 5px!important;
   font-size: 1.2em;
 }
 
@@ -5832,6 +5850,14 @@ button.btn-nandaresende-cta:active {
     display: block !important;
     margin-bottom: 20px !important;
   }
+  .section-products-featured .last-price,
+  .section-plus-sale .last-price,
+  .section-products .last-price,
+  .section-product-sugestion .last-price {
+    font-size: 1em;
+    line-height: 1;
+    padding-right: 5px;
+  }
 }
 
 @media only screen and (max-width: 1100px) {
@@ -6160,8 +6186,18 @@ button.btn-nandaresende-cta:active {
   .section-plus-sale .last-price,
   .section-products .last-price,
   .section-product-sugestion .last-price {
-    font-size: 0.8em!important;
+    display: none;
   }
+  .section-products-featured .price.price-variation,
+  .section-plus-sale .price.price-variation,
+  .section-products .price.price-variation,
+  .section-product-sugestion .price.price-variation {
+    font-size: 1.2em;
+  }
+  .price.price-variation del {
+    display:none;
+  }
+
 }
 
 @media only screen and (max-width: 567px) {
@@ -6205,13 +6241,7 @@ button.btn-nandaresende-cta:active {
   .feature-section .contact-info .icon-box {
     left: 10px !important;
   }
-  .section-products-featured .price.price-variation,
-  .section-plus-sale .price.price-variation,
-  .section-products .price.price-variation,
-  .section-product-sugestion .price.price-variation {
-    font-size: 0.9em;
-    line-height: 1;
-  }
+
 }
 
 /*# sourceMappingURL=maps/style.css.map */
