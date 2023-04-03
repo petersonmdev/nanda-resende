@@ -1228,6 +1228,9 @@ p.no-comments {
 
 .carousel-vertical {
   max-width: 130px;
+  max-height: 450px;
+  overflow: overlay;
+  position: relative;
 }
 
 .carousel-vertical a {

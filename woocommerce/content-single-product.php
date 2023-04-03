@@ -55,11 +55,9 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                         $gallery_ids = $product->get_gallery_image_ids();
                         $i = 1;
                         foreach( $gallery_ids as $gallery_id ) {
-                            $image_link = wp_get_attachment_url( $gallery_id );
-                        ?>
-
-                            <li class="d-block nav-item" data-target="#productSimple" data-slide-to="<?php echo$i?>">
-                                <a class="nav-link" id="home-tab" data-toggle="tab" href="#img<?php echo$i?>" role="tab" aria-controls="img<?php echo$i?>" aria-selected="true">
+                            $image_link = wp_get_attachment_url( $gallery_id ); ?>
+                            <li class="d-block nav-item" data-target="#productSimple" data-slide-to="<?php echo$i ?>">
+                                <a class="nav-link" id="home-tab" data-toggle="tab" href="#img<?php echo $i ?>" role="tab" aria-controls="img<?php echo$i?>" aria-selected="true">
                                     <img src="<?php echo$image_link?>" alt="images" class="img-responsive img-product">
                                 </a>
                             </li>
