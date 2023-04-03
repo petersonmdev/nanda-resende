@@ -382,6 +382,11 @@
 	    var to =  next.index();
 	  
 	  	$('.carousel-vertical a.nav-link').removeClass('active').eq(to).addClass('active');
+		var childItem = $('.carousel-vertical a.nav-link.active').parent().offset().top
+		var posTop = Math.abs($('.carousel-vertical').offset().top-childItem);
+		$('.carousel-vertical').animate({
+			scrollTop: posTop
+		}, 500);
 	});
 
 	// Logo
