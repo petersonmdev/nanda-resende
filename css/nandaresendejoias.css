@@ -5460,6 +5460,35 @@ button.btn-nandaresende-cta:active {
   transition: all 500ms ease;
 }
 
+.content-all-products .nav-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.content-all-products .page-numbers {
+  display: inline-block;
+  padding: 5px 10px;
+  margin-right: 10px;
+  color: #752566;
+  background-color: #fff;
+  border: 2px solid #752566;
+  border-radius: 5px;
+}
+
+.content-all-products .page-numbers:hover {
+  background-color: #752566;
+  color: #fff;
+}
+
+.content-all-products .current {
+  font-weight: bold;
+  background-color: #752566;
+  color: #fff;
+  border-color: #752566;
+}
+
 .styled-pagination {
   padding-top: 50px;
 }

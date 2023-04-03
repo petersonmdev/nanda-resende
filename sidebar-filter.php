@@ -97,25 +97,25 @@ if( $_POST['has-filter'] == 'true' ){
 
 	jQuery(document).ready(function(){
 		$(".cat-filter").click(function(e){
-		e.preventDefault();
-		$("#cat-filter li > a").removeClass("active");
-		$(this).addClass("active");
-		var category = $(this).attr('data-selected');
-		$("input[name=cat-filter]").val(category);
-		
-		$("#form-filter").submit();
+            e.preventDefault();
+            $("#cat-filter li > a").removeClass("active");
+            $(this).addClass("active");
+            var category = $(this).attr('data-selected');
+            $("input[name=cat-filter]").val(category);
+
+            $("#form-filter").submit();
 		});
 		$(".color-filter").click(function(e){
-		e.preventDefault();
-		$("#color-filter li > a").removeClass("active");
-		$(this).addClass("active");
-		var color = $(this).attr('data-selected');
-		$("input[name=color-filter]").val(color);
-		
-		$("#form-filter").submit();
+            e.preventDefault();
+            $("#color-filter li > a").removeClass("active");
+            $(this).addClass("active");
+            var color = $(this).attr('data-selected');
+            $("input[name=color-filter]").val(color);
+
+            $("#form-filter").submit();
 		});
 		$("#filterPrice").change(function(event) {
-		$("#form-filter").submit();
+		    $("#form-filter").submit();
 		});
 	});
 </script>

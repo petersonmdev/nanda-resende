@@ -38,9 +38,6 @@ if( !empty($_GET['categoria']) ){
 if( $_POST['has-filter'] == 'true' ){
     $has_filter = true;
 
-    if(!empty($_POST['busca']))
-        $filter['s'] = $_POST['busca'];
-
     if(!empty($_POST['cat-filter'])){
         $filter['category'] = $_POST['cat-filter'];
         $product_cat = $filter['category'];
@@ -50,49 +47,59 @@ if( $_POST['has-filter'] == 'true' ){
 
     if(!empty($_POST['price-filter'])){
         $filter['price'] = $_POST['price-filter'];
-        $price_filter = [
-            'relation' => 'OR',
-            [
-                'key' => '_regular_price',
-                'value' => $filter['price'],
-                'type' => 'NUMERIC',
-                'compare' => '<='
-            ],
-            [
-                'key' => '_sale_price',
-                'value' => $filter['price'],
-                'type' => 'NUMERIC',
-                'compare' => '<='
-            ],
-        ];
+        $price_filter = $filter['price'];
     }else{
         $price_filter = null;
     }
+
 }
 
-$meta_query  = WC()->query->get_meta_query();
-$tax_query   = WC()->query->get_tax_query();
-$tax_query[] = array(
-    'taxonomy' => 'product_visibility',
-    'field'    => 'name',
-    'terms'    => 'featured',
-    'operator' => 'IN',
+$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+$args = array(
+    'post_type' => 'product',
+    'post_status' => 'publish',
+    'posts_per_page' => 9,
+    'paged' => $paged
 );
 
-if (!$price_filter && !$product_cat) {
-    $params = array(
-        'post_type'           => 'product',
-        'post_status'         => 'publish',
-        'ignore_sticky_posts' => 1,
-        'orderby'             => 'rand',
-        'meta_query'          => $meta_query,
-        'tax_query'           => $tax_query,
+if (!empty($product_cat)) {
+    $args['tax_query'] = array(
+        'relation' => 'AND',
+        array(
+            'taxonomy' => 'product_cat',
+            'field' => 'slug',
+            'terms' => $product_cat
+        )
     );
-} else {
-    $params = array(
-        'post_type'   => 'product',
-        'product_cat' => $product_cat,
-        'meta_query'  => $price_filter
+}
+
+if (!empty($price_filter)) {
+    $args['meta_query'] = array(
+        'relation' => 'OR',
+        [
+            'key' => '_regular_price',
+            'value' => $price_filter,
+            'type' => 'NUMERIC',
+            'compare' => '<='
+        ],
+        [
+            'key' => '_price',
+            'value' => $price_filter,
+            'type' => 'NUMERIC',
+            'compare' => '<='
+        ],
+        [
+            'key' => '_min_variation_price',
+            'value' => $price_filter,
+            'type' => 'NUMERIC',
+            'compare' => '<='
+        ],
+        [
+            'key' => '_sale_price',
+            'value' => $price_filter,
+            'type' => 'NUMERIC',
+            'compare' => '<='
+        ],
     );
 }
 
@@ -108,7 +115,7 @@ if (!$price_filter && !$product_cat) {
                 <div class="content-all-products">
                     <div class="row align-items-center">
 
-                        <?php $wc_query = new WP_Query($params); ?>
+                        <?php $wc_query = new WP_Query($args); ?>
 
                         <?php if ( $wc_query->have_posts() ) : ?>
                             <?php while ( $wc_query->have_posts() ) :
@@ -142,17 +149,17 @@ if (!$price_filter && !$product_cat) {
                                     <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
                                 </div>
                             <?php endwhile; ?>
+                            <?php if($wc_query->max_num_pages > 1) { ?>
+                                <div class="col-12">
+                                    <?php the_posts_pagination(); ?>
+                                </div>
+                            <?php } ?>
+
                         <?php else: ?>
                             <h3 class="col-12 text-center">Nenhum produto encontrado!</h3>
                             <?php wp_reset_postdata(); ?>
                         <?php endif; ?>
                     </div>
-                    <nav class="nav-pagination-nandaresende container">
-                        <ul class="list-unstyled p-0 row">
-                            <li class="col-6 text-left pl-0"><?php previous_posts_link( '&laquo; Anterior', $wc_query->max_num_pages) ?></li>
-                            <li class="col-6 text-right pr-0"><?php next_posts_link( 'Próximo &raquo;', $wc_query->max_num_pages) ?></li>
-                        </ul>
-                    </nav>
                 </div>
 
             </div>
