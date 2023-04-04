@@ -20,7 +20,7 @@
 $number = '5562996169196';
 
 // Mensagem de texto padrão para identificar que veio do site
-$msg = 'Olá, vim do Site Nanda Resende joias, poderia me ajudar?';
+$msg = 'Olá, vim da loja Nanda Resende joias, poderia me ajudar?';
 
 // link WhatsApp
 $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
