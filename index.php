@@ -77,7 +77,6 @@ get_header();
         <div class="section-title my-5">
           <h3>Destaques</h3>
         </div>
-      </div>
       <div class="d-none d-lg-flex">
             <?php
             $meta_query  = WC()->query->get_meta_query();
@@ -198,8 +197,8 @@ get_header();
           wp_reset_postdata(); ?>
         </div>
       </div>
-    </div>
   </div>
+    </div>
 </section>
 
 <section class="section-products-featured section section-nandaresende">

@@ -40,7 +40,7 @@
   <!--footer-main-->
     <footer class="footer-main footer-nandaresende">
         <div class="footer-top">
-            <div class="container">
+            <div class="container px-0">
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-12 mb-4">
                         <h6 class="title-footer-top">Navegação</h6>

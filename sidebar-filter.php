@@ -40,32 +40,40 @@ if( $_POST['has-filter'] == 'true' || is_product_category()){
 };
 
 ?>
-
-<aside class="col-3 d-lg-block d-none filter-sidebar filter-nandaresende">
+<aside class="col-lg-3 col-12 filter-sidebar mb-4 filter-nandaresende">
 	<form name="form-filter" id="form-filter" action="<?php echo esc_url(home_url('/loja')); ?>" method="post">
 		<div class="content-filter-nandaresende <?php echo ($product_cat || $price_filter) ? 'filtro-ativado' : '' ?>">
 		  <?php if ($product_cat || $price_filter || is_product_category()) { ?>
 			<span class="text-center p-2 txt-filter-active">filtro ativado</span>
 		  <?php } ?>
-		  <div class="section-title text-center mt-3 mb-3">
-			<h5>Filtros</h5>
+		  <div class="section-title toggle-categories text-center justify-content-center d-flex mt-3 mb-3">
+			<h5 class="px-2">Filtrar</h5>
+            <span class="material-symbols-outlined">tune</span>
 		  </div>
-		  <div class="p-3 mb-3 rounded">
+		  <div class="p-3 mb-3 rounded content-minimal-filter">
 		    <h4 class="subtitle-nandaresende mb-2">Categorias</h4>
 		    <input type="hidden" name="cat-filter" value="<?php echo isset($filter['category']) ? $filter['category'] : '' ; ?>">
-		    <ol id="cat-filter" class="list-unstyled list-filter-nandaresende mb-2">
+		    <ol id="cat-filter" class="d-lg-block d-none list-unstyled list-filter-nandaresende mb-2">
 		        <?php $terms = get_terms( 'product_cat', array('hide_empty' => false, 'parent' => 0) );
 		        foreach ( $terms as $term ) : ?>
 		            <li>
 		              <a class="cat-filter <?php echo ($filter['category'] == $term->slug) || ($product_cat == $term->slug) ? 'active' : ''; ?>" data-selected="<?php echo $term->slug ?>">
-		                <?php echo $term->name ?>                                
+		                <?= $term->name ?><small><?= " (".$term->count.")" ?></small>
 		              </a>
 		            </li>
 		        <?php endforeach; ?>
 		    </ol>
+              <div class="content-mobile">
+                  <select class="d-lg-none col-md-12" id="cat-filter-select">
+                      <option class="w-100" value="">Selecione uma categoria...</option>
+                      <?php foreach ( $terms as $term ) : ?>
+                          <option class="w-100" <?php echo ($filter['category'] == $term->slug) || ($product_cat == $term->slug) ? 'selected' : '' ; ?> value="<?= $term->slug ?>"><?= $term->name." (".$term->count.")" ?> </option>
+                      <?php endforeach; ?>
+                  </select>
+              </div>
 		   </div>
 
-			<div class="p-3 mb-3 rounded">
+			<div class="p-3 mb-3 rounded content-minimal-filter">
 				<h4 class="subtitle-nandaresende mb-2">Preço</h4>
 				<div class="slidecontainer">
 					<div class="row content-text-filter-price">
@@ -93,3 +101,4 @@ if( $_POST['has-filter'] == 'true' || is_product_category()){
 		</div>
 	</form>
 </aside>
+

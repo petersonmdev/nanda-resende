@@ -164,7 +164,7 @@ if ( ! function_exists( 'nanda_resende_woocommerce_wrapper_before' ) ) {
 		?>
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main pt-3 pb-3" role="main">
-        		<div class="container">
+        		<div class="container p-0">
 			<?php
 	}
 }

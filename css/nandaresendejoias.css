@@ -435,6 +435,10 @@ nav.navbar {
 
 /* Aside */
 
+.content-filter-nandaresende .section-title.toggle-categories span {
+  color: #752566;
+}
+
 .content-filter-nandaresende {
   border: 3px solid #752566;
   border-radius: 10px!important;

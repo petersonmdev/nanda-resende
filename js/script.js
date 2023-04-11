@@ -1145,6 +1145,22 @@ jQuery(document).ready(function ($) {
 		$("#form-filter").submit();
 	});
 
+	$("#cat-filter-select").on('change', (function(e){
+		e.preventDefault();
+		var category = $(this).val();
+		$("input[name=cat-filter]").val(category);
+
+		$("#form-filter").submit();
+	}));
+
+	if ($(window).width() < 992) {
+		$(".content-minimal-filter").slideToggle();
+	}
+
+	$(".toggle-categories").on("click", function() {
+		$(".content-minimal-filter").slideToggle();
+	});
+
 	$("#filterPrice").change(function(event) {
 		$("#form-filter").submit();
 	});
