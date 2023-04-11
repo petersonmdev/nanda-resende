@@ -287,6 +287,17 @@ if( function_exists('acf_add_options_page') ) {
     ));
 }
 
+if( function_exists('acf_add_options_page') ) {
+    acf_add_options_page(array(
+        'page_title'    => 'Promoção de desconto para primeira compra',
+        'menu_title'    => 'Primeira compra',
+        'menu_slug'     => 'primeira-compra',
+        'capability'    => 'edit_posts',
+        'icon_url'      => 'dashicons-money-alt',
+        'redirect'      => false
+    ));
+}
+
 // Retorna avaliaçãoes dos produtos (estrelinhas);
 function get_star_rating() {
 
@@ -686,6 +697,49 @@ add_theme_support( 'woocommerce', array(
     'gallery_thumbnail_image_width' => 150,
     'single_image_width' => 500,
 ) );
+
+// Desconto para primeira compra
+
+function wc_first_purchase_discount() {
+    global $woocommerce;
+
+    if ( get_field('primeira_compra_ativa', 'option') ) {
+
+        $customer_id = get_current_user_id();
+        $order_count = wc_get_customer_order_count( $customer_id );
+
+        if( $order_count == 0 ) {
+            $discount = get_field('valor_desconto', 'option');
+            $type_discount = get_field('tipo_de_deconto', 'option');
+            switch ($type_discount) :
+                case 'fixo' :
+                    $woocommerce->cart->add_fee( "Primeira compra", -$discount );
+                    break;
+                case 'percent-cart' :
+                    $discountCart = $woocommerce->cart->subtotal * ( $discount / 100 );
+                    $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'%)', -$discountCart );
+                    break;
+                case 'percent-product' :
+                    $max_price = 0;
+                    $max_key = null;
+                    foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $cart_item ) {
+                        $product = $cart_item['data'];
+                        $price = $product->get_price();
+                        if ( $price > $max_price ) {
+                            $max_price = $price;
+                            $max_key = $cart_item_key;
+                        }
+                    }
+                    $discountProduct = $max_price *  ( $discount / 100 );
+                    $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'% sob o produto de maior valor)', -$discountProduct );
+                    break;
+            endswitch;
+        }
+
+    }
+}
+add_action( 'woocommerce_cart_calculate_fees', 'wc_first_purchase_discount' );
+
 
 // Preço de Produto variável
 
