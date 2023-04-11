@@ -435,6 +435,10 @@ nav.navbar {
 
 /* Aside */
 
+.content-filter-nandaresende .section-title.toggle-categories {
+  cursor: pointer;
+}
+
 .content-filter-nandaresende .section-title.toggle-categories span {
   color: #752566;
 }
