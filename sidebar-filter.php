@@ -47,7 +47,7 @@ if( $_POST['has-filter'] == 'true' || is_product_category()){
 			<span class="text-center p-2 txt-filter-active">filtro ativado</span>
 		  <?php } ?>
 		  <div class="section-title toggle-categories text-center justify-content-center d-flex mt-3 mb-3">
-			<h5 class="px-2">Filtrar</h5>
+			<h5 class="px-2"><?= ($product_cat || $price_filter || is_product_category()) ? 'Alterar filtro' : 'Filtrar'; ?></h5>
             <span class="material-symbols-outlined">tune</span>
 		  </div>
 		  <div class="p-3 mb-3 rounded content-minimal-filter">
