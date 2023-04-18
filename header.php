@@ -39,6 +39,16 @@ $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
         })(window,document,'script','dataLayer','GTM-NBLWVS2');</script>
     <!-- End Google Tag Manager -->
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VFRC6C9JQ7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-VFRC6C9JQ7');
+    </script>
+
   <?php wp_head(); ?>
 
 </head>
