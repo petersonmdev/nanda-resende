@@ -30,6 +30,7 @@ $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
 <head>
   <meta charset="<?php bloginfo('charset'); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="dwQs4fLrn3d-1XuON-B2_-aGf3YqWAVR8B5sntWUQac" />
   <link rel="profile" href="https://gmpg.org/xfn/11">
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
