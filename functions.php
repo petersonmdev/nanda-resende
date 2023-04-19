@@ -146,6 +146,10 @@ function nanda_resende_scripts() {
     wp_enqueue_script( 'nanda-resende-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '1.0', true );
     wp_enqueue_script( 'nanda-resende-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '1.0', true );
     wp_enqueue_script( 'nanda-resende-autocomplete-address', get_template_directory_uri() . '/js/autocomplete-address.js', array('jquery'), '1.0', true );
+    wp_enqueue_script( 'nanda-resende-script-checkout', get_template_directory_uri() . '/js/script-checkout-v2.js', array('jquery'), '1.0', true );
+    wp_localize_script( 'jquery', 'myAjax', array(
+        'ajaxurl' => admin_url( 'admin-ajax.php' )
+    ));
     
     // wp_enqueue_script('woocommerce-ajax-add-to-cart', get_template_directory_uri() . '/js/ajax-add-to-cart.js', array('jquery'),'1.0' );
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -698,48 +702,145 @@ add_theme_support( 'woocommerce', array(
     'single_image_width' => 500,
 ) );
 
-// Desconto para primeira compra
-
+/**
+ * Desconto para primeira compra
+ */
 function wc_first_purchase_discount() {
-    global $woocommerce;
-
-    if ( get_field('primeira_compra_ativa', 'option') ) {
-
-        $customer_id = get_current_user_id();
-        $order_count = wc_get_customer_order_count( $customer_id );
-
-        if( $order_count == 0 ) {
-            $discount = get_field('valor_desconto', 'option');
-            $type_discount = get_field('tipo_de_deconto', 'option');
-            switch ($type_discount) :
-                case 'fixo' :
-                    $woocommerce->cart->add_fee( "Primeira compra", -$discount );
-                    break;
-                case 'percent-cart' :
-                    $discountCart = $woocommerce->cart->subtotal * ( $discount / 100 );
-                    $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'%)', -$discountCart );
-                    break;
-                case 'percent-product' :
-                    $max_price = 0;
-                    $max_key = null;
-                    foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $cart_item ) {
-                        $product = $cart_item['data'];
-                        $price = $product->get_price();
-                        if ( $price > $max_price ) {
-                            $max_price = $price;
-                            $max_key = $cart_item_key;
-                        }
-                    }
-                    $discountProduct = $max_price *  ( $discount / 100 );
-                    $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'% sob o produto de maior valor)', -$discountProduct );
-                    break;
-            endswitch;
-        }
-
+    $first_order = WC()->session->get( 'first_order' );
+    if ( (!get_field('primeira_compra_ativa', 'option') || !is_user_logged_in()) && !$first_order ) {
+        return;
     }
+
+    global $woocommerce;
+    $discount = get_field('valor_desconto', 'option');
+    $discount_type = get_field('tipo_de_deconto', 'option');
+    $customer_id = get_current_user_id();
+
+    $order_count = wc_get_customer_order_count( $customer_id );
+    if( $order_count > 0 ) {
+        return;
+    }
+
+    $max_price = 0;
+    $max_key = null;
+    foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $cart_item ) {
+        $product = $cart_item['data'];
+        $price = $product->get_price();
+        if ( $price > $max_price ) {
+            $max_price = $price;
+            $max_key = $cart_item_key;
+        }
+    }
+
+    switch ($discount_type) :
+        case 'fixo' :
+            $woocommerce->cart->add_fee( "Primeira compra", -$discount );
+            break;
+        case 'percent-cart' :
+            $discountCart = $woocommerce->cart->subtotal * ( $discount / 100 );
+            $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'%)', -$discountCart );
+            break;
+        case 'percent-product' :
+            if ( !$max_key ) {
+                break;
+            }
+            $discountProduct = $max_price *  ( $discount / 100 );
+            $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'% sob o produto de maior valor)', -$discountProduct );
+            break;
+    endswitch;
 }
+
 add_action( 'woocommerce_cart_calculate_fees', 'wc_first_purchase_discount' );
 
+function update_billing_email() {
+    if ( !get_field('primeira_compra_ativa', 'option') && is_user_logged_in() ) {
+        return;
+    }
+
+    WC()->session->set( 'first_order', null );
+
+    $user_email = isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
+    if ( !empty($user_email) ) {
+        $user = get_user_by( 'email', $user_email );
+        if ( $user ) {
+            $customer_id = $user->ID;
+            $order_count = wc_get_customer_order_count( $customer_id );
+        }
+
+        if ( $order_count == 0 || !$user ) {
+            WC()->session->set('first_order', true);
+            echo 'Promoção primeira compra ativada!';
+        } else {
+            WC()->session->set('first_order', null);
+        }
+    }
+    die();
+}
+
+add_action('wp_ajax_update_billing_email', 'update_billing_email');
+add_action('wp_ajax_nopriv_update_billing_email', 'update_billing_email');
+
+/*add_action('wp_ajax_update_billing_email', 'update_billing_email_callback');
+add_action('wp_ajax_nopriv_update_billing_email', 'update_billing_email_callback');
+
+function update_billing_email_callback() {
+    $email = $_POST['billing_email'];
+
+    // Adicione a taxa ao carrinho.
+    WC()->cart->add_fee('Taxa de exemplo', 10.00);
+
+    wp_die();
+}*/
+
+/*function add_custom_fee() {
+    ?>
+    <script>
+        jQuery('body').on('change', '#billing_email', function() {
+            var email = jQuery('#billing_email').val();
+            jQuery.ajax({
+                type: 'POST',
+                url: wc_checkout_params.ajax_url,
+                data: {
+                    action: 'add_custom_fee',
+                    email: email
+                },
+                success: function (response) {
+                    console.log("Dados:", response);
+                    jQuery('div#order_review').html(response);
+                }
+            });
+
+        });
+    </script>
+    <?php
+}
+add_action( 'woocommerce_checkout_before_order_review', 'add_custom_fee' );
+
+// Callback da função ajax
+function add_custom_fee_callback() {
+    $user_email = isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
+    if ( !empty($user_email) ) {
+        $user = get_user_by( 'email', $user_email );
+        if ( $user ) {
+            $customer_id = $user->ID;
+            $order_count = wc_get_customer_order_count( $customer_id );
+        }
+
+        if ( $order_count == 0 || !$user ) {
+            WC()->cart->add_fee( 'Taxa Personalizada', 10 );
+            WC()->session->set( 'custom_fee_added', true );
+            //echo WC()->cart->get_cart_contents_count();
+            $fragments = WC_AJAX::get_refreshed_fragments();
+            if ( isset( $fragments['div#order_review'] ) ) {
+                echo $fragments['div#order_review'];
+            }
+            wp_die();
+        }
+    }
+}
+add_action( 'wp_ajax_add_custom_fee', 'add_custom_fee_callback' );
+add_action( 'wp_ajax_nopriv_add_custom_fee', 'add_custom_fee_callback' );
+*/
 
 // Preço de Produto variável
 
