@@ -81,7 +81,7 @@
 
     });
     
-    $(document).on('click', '.single_add_to_cart_button', function (e) {
+    $(document).on('click', '.product_type_simple.add_to_cart_button', function (e) {
         e.preventDefault();
 
         var $thisbutton = $(this),
@@ -112,24 +112,25 @@
                 $thisbutton.addClass('added').removeClass('loading');
             },
             success: function (response) {
-
-                if (response.error & response.product_url) {
-                    window.location = response.product_url;
+                console.log(response);
+                if (response.error && response.product_url) {
+                    //window.location = response.product_url;
+                    alertify.notify("Erro ao adicionar produto ao carrinho!", "error", 2);
                     return;
-                } else {
-                    $(document.body).trigger('added_to_cart', [response.fragments, response.cart_hash, $thisbutton]);
-                    $(document.body).trigger('wc_fragment_refresh');
-                    $(document.body).removeClass("loading");
-                    alertify.set({ delay: 1700 });
-                    alertify.success("Adicionado ao carrinho!");
                 }
+
+                $(document.body).trigger('added_to_cart', [response.fragments, response.cart_hash, $thisbutton]);
+                $(document.body).trigger('wc_fragment_refresh');
+                $(document.body).removeClass("loading");
+                alertify.notify("Adicionado ao carrinho!", "success", 2);
+
             },
         });
 
         return false;
     });
 
-    $(document).on('click', '.remove_from_cart_button', function (e) {
+    $(document).on('click', '.remove', function (e) {
         e.preventDefault();
 
         var data = {
@@ -142,14 +143,12 @@
             url: wc_add_to_cart_params.ajax_url,
             data: data,
             success: function (response) {
-
                 if (response.error & response.product_url) {
                     window.location = response.product_url;
                     return;
                 } else {
                     $(document.body).removeClass("loading");
-                    alertify.set({ delay: 1700 });
-                    alertify.success("Removido do carrinho!");
+                    alertify.notify("Removido do carrinho!", "error", 2);
                 }
             },
         });

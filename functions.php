@@ -122,7 +122,8 @@ function nanda_resende_scripts() {
     wp_enqueue_style( 'nanda-resende-main', get_template_directory_uri() . '/css/nandaresendejoias.css', array(), '1.0', 'all' );
     wp_enqueue_style( 'nanda-resende-fontawesome', get_template_directory_uri() . '/css/fontawesome.min.all.css', array(), '5.11.1', 'all' );
     wp_enqueue_style( 'nanda-resende-checkout', get_template_directory_uri() . '/css/checkout-v3.css', array(), '2.0', 'all' );
-    
+    wp_enqueue_style( 'nanda-resende-alertify-css', get_template_directory_uri() . '/plugins/alertify/alertify.min.css', array(), '1.0');
+
     wp_enqueue_style( 'nanda-resende-style', get_stylesheet_uri() );
 
     if(!is_checkout()) {
@@ -140,6 +141,7 @@ function nanda_resende_scripts() {
         wp_enqueue_script( 'nanda-resende-wow', get_template_directory_uri() . '/plugins/wow.js', array(), '1.0.1', true );
         wp_enqueue_script( 'nanda-resende-jquery-ui', get_template_directory_uri() . '/plugins/jquery-ui.js', array(), '1.11.4', true );
         wp_enqueue_script( 'nanda-resende-timePicker', get_template_directory_uri() . '/plugins/timePicker.js', array(), '0.8', true );
+        wp_enqueue_script( 'nanda-resende-alertify-js', get_template_directory_uri() . '/plugins/alertify/alertify.min.js', array('jquery'), '1.0', true);
         wp_enqueue_script( 'nanda-resende-script', get_template_directory_uri() . '/js/script.js', array(), '1.0', true );
     }
 
@@ -302,7 +304,7 @@ if( function_exists('acf_add_options_page') ) {
     ));
 }
 
-// Retorna avaliaçãoes dos produtos (estrelinhas);
+// Retorna avaliações dos produtos (estrelinhas);
 function get_star_rating() {
 
     global $woocommerce, $product;
@@ -780,67 +782,41 @@ function update_billing_email() {
 add_action('wp_ajax_update_billing_email', 'update_billing_email');
 add_action('wp_ajax_nopriv_update_billing_email', 'update_billing_email');
 
-/*add_action('wp_ajax_update_billing_email', 'update_billing_email_callback');
-add_action('wp_ajax_nopriv_update_billing_email', 'update_billing_email_callback');
+function custom_alertify_replace_notices() {
 
-function update_billing_email_callback() {
-    $email = $_POST['billing_email'];
+    if (wc_notice_count() > 0) {
+        $alerts = array();
 
-    // Adicione a taxa ao carrinho.
-    WC()->cart->add_fee('Taxa de exemplo', 10.00);
+        $categories = array('error', 'info', 'warning', 'success');
 
-    wp_die();
-}*/
-
-/*function add_custom_fee() {
-    ?>
-    <script>
-        jQuery('body').on('change', '#billing_email', function() {
-            var email = jQuery('#billing_email').val();
-            jQuery.ajax({
-                type: 'POST',
-                url: wc_checkout_params.ajax_url,
-                data: {
-                    action: 'add_custom_fee',
-                    email: email
-                },
-                success: function (response) {
-                    console.log("Dados:", response);
-                    jQuery('div#order_review').html(response);
+        foreach ($categories as $category) {
+            if (wc_notice_count($category) > 0) {
+                foreach (wc_get_notices($category) as $notice) {
+                    $alerts[] = array(
+                        'message' => $notice['notice'],
+                        'type' => $category,
+                    );
                 }
-            });
 
-        });
-    </script>
-    <?php
-}
-add_action( 'woocommerce_checkout_before_order_review', 'add_custom_fee' );
-
-// Callback da função ajax
-function add_custom_fee_callback() {
-    $user_email = isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
-    if ( !empty($user_email) ) {
-        $user = get_user_by( 'email', $user_email );
-        if ( $user ) {
-            $customer_id = $user->ID;
-            $order_count = wc_get_customer_order_count( $customer_id );
-        }
-
-        if ( $order_count == 0 || !$user ) {
-            WC()->cart->add_fee( 'Taxa Personalizada', 10 );
-            WC()->session->set( 'custom_fee_added', true );
-            //echo WC()->cart->get_cart_contents_count();
-            $fragments = WC_AJAX::get_refreshed_fragments();
-            if ( isset( $fragments['div#order_review'] ) ) {
-                echo $fragments['div#order_review'];
+                wc_clear_notices($category);
             }
-            wp_die();
         }
+
+        //wc_clear_notices();
+
+        wp_enqueue_script('nanda-resende-alertify-js', get_template_directory_uri() . '/plugins/alertify/alertify.min.js', array('jquery'), '1.0');
+        wp_enqueue_style( 'nanda-resende-alertify-css', get_template_directory_uri() . '/plugins/alertify/alertify.min.css', array(), '1.0');
+
+        wp_add_inline_script('nanda-resende-alertify-js', 'jQuery(function($) {
+            var alerts = ' . wp_json_encode($alerts) . ';
+            console.log(alerts);
+            alerts.forEach(function(alert) {
+                alertify.notify(alert.message, alert.type, 15, );
+            });
+        });');
     }
 }
-add_action( 'wp_ajax_add_custom_fee', 'add_custom_fee_callback' );
-add_action( 'wp_ajax_nopriv_add_custom_fee', 'add_custom_fee_callback' );
-*/
+add_action('wp_enqueue_scripts', 'custom_alertify_replace_notices', 999);
 
 // Preço de Produto variável
 

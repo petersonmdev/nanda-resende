@@ -32,6 +32,7 @@ $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="dwQs4fLrn3d-1XuON-B2_-aGf3YqWAVR8B5sntWUQac" />
   <link rel="profile" href="https://gmpg.org/xfn/11">
+    <?php if (str_contains(get_site_url(), 'nandaresendejoias.com.br')) : ?>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -49,6 +50,7 @@ $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
 
         gtag('config', 'G-VFRC6C9JQ7');
     </script>
+    <?php endif; ?>
 
   <?php wp_head(); ?>
 
@@ -57,10 +59,13 @@ $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
 <?php if (is_page('finalizar-compra')) { ?>
 
   <body <?php body_class(); ?>>
+
+    <?php if (str_contains(get_site_url(), 'nandaresendejoias.com.br')) : ?>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NBLWVS2"
                       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <?php endif; ?>
 
     <?php wp_body_open(); ?>
     <div id="page" class="site">
@@ -138,13 +143,21 @@ $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
                                   </div>
                               </div>
                           </li>
-                          <li class="item item-icons-cart">
+                          <li class="item item-icons-cart item-cart">
                               <a href="<?php echo wc_get_cart_url(); ?>">
                                   <span class="material-symbols-outlined">
                                       shopping_cart
                                   </span>
                                   <span id="mini-cart-count" class="contador-cart"></span>
                               </a>
+                              <div class="dropdown-content cart">
+                                  <ul class="list-unstyled">
+                                      <!-- <div id="header-cart-count"></div> -->
+                                      <div id="mini-cart-content" class="sub-menu sub-menu--right sub-menu--cart">
+                                          <?php my_wc_mini_cart_content(); ?>
+                                          <div>
+                                  </ul>
+                              </div>
                           </li>
                           <li class="item item-icons-account">
                               <a href="<?php echo get_permalink(wc_get_page_id('myaccount')); ?>">
@@ -178,7 +191,7 @@ $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
                 </div>
                 <div class="d-md-block d-lg-none">
                     <ul class="content-cart-mobile p-0 m-0">
-                        <li class="item d-inline item-icons-cart">
+                        <li class="item d-inline item-icons-cart item-cart">
                             <a href="<?php echo wc_get_cart_url(); ?>">
                                 <span class="material-symbols-outlined">
                                   shopping_cart

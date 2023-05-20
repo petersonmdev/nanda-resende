@@ -40,7 +40,7 @@ if( $_POST['has-filter'] == 'true' || is_product_category()){
 };
 
 ?>
-<aside class="col-lg-3 col-12 filter-sidebar mb-4 filter-nandaresende">
+<aside class="col-lg-3 col-12 filter-sidebar mb-4 pr-lg-0 filter-nandaresende">
 	<form name="form-filter" id="form-filter" action="<?php echo esc_url(home_url('/loja')); ?>" method="post">
 		<div class="content-filter-nandaresende <?php echo ($product_cat || $price_filter) ? 'filtro-ativado' : '' ?>">
 		  <?php if ($product_cat || $price_filter || is_product_category()) { ?>

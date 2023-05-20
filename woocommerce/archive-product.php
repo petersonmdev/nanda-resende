@@ -145,50 +145,49 @@ if (!empty($price_filter)) {
             <div class="col-lg-9 col-md-12 container-main container-main-nandaresende">
                 <div class="content-all-products">
                     <div class="row align-items-center">
-                        <?php $wc_query = new WP_Query($args);
+                        <div class="container">
+                            <?php $wc_query = new WP_Query($args);
 
-                        if ( $wc_query->have_posts() ) : ?>
-                            <?php while ( $wc_query->have_posts() ) :
-                                $wc_query->the_post();
-                                $product = wc_get_product( get_the_ID() ); ?>
-                                <div class="product col col-lg-4 col-6 col-sm-4 col-md-4 mb-4">
-                                    <div class="content-img-product">
-                                        <?php $woo_prices = woocommerce_prices($product);
-                                        if ($woo_prices['on_sale']) { ?>
-                                            <span class="badge-sale">Promoção</span>
-                                        <?php } ?>
-                                        <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
-                                        <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
-                                    </div>
-                                    <div class="category-name py-2"><?php echo $product->get_categories(); ?></div>
-                                    <a href="<?php the_permalink(); ?>">
-                                        <div class="product-name pt-2"><?php the_title() ?></div>
-                                        <div class="content-prices d-flex pb-2 pt-3">
-                                            <?php if ($woo_prices['type'] == 'variable') { ?>
-                                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
-                                            <?php } else { ?>
-                                                <?php if ($woo_prices['on_sale']) { ?>
-                                                    <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
-                                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
-                                                <?php } else { ?>
-                                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </div>
-                                    </a>
-                                    <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
-                                </div>
-                            <?php endwhile; ?>
-                            <?php if($wc_query->max_num_pages > 1) { ?>
-                                <div class="col-12">
-                                    <?php the_posts_pagination(); ?>
-                                </div>
-                            <?php } ?>
+                            if ( $wc_query->have_posts() ) :
+                                /**
+                                 * Hook: woocommerce_before_shop_loop.
+                                 *
+                                 * @hooked woocommerce_output_all_notices - 10
+                                 * @hooked woocommerce_result_count - 20
+                                 * @hooked woocommerce_catalog_ordering - 30
+                                 */
+                                do_action( 'woocommerce_before_shop_loop' );
 
-                        <?php else: ?>
-                            <h3 class="col-12 text-center">Nenhum produto encontrado!</h3>
-                            <?php wp_reset_postdata(); ?>
-                        <?php endif; ?>
+                                woocommerce_product_loop_start();
+
+                                if ( wc_get_loop_prop( 'total' ) ) {
+                                    while ( have_posts() ) {
+                                        the_post();
+
+                                        /**
+                                         * Hook: woocommerce_shop_loop.
+                                         */
+                                        do_action( 'woocommerce_shop_loop' );
+
+                                        wc_get_template_part( 'content', 'product' );
+                                    }
+                                }
+
+                                woocommerce_product_loop_end(); ?>
+
+                                <?php
+                                /**
+                                 * Hook: woocommerce_after_shop_loop.
+                                 *
+                                 * @hooked woocommerce_pagination - 10
+                                 */
+                                do_action( 'woocommerce_after_shop_loop' ); ?>
+
+                            <?php else: ?>
+                                <h3 class="col-12 text-center">Nenhum produto encontrado!</h3>
+                                <?php wp_reset_postdata(); ?>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
 

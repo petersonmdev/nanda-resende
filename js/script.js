@@ -1165,4 +1165,9 @@ jQuery(document).ready(function ($) {
 		$("#form-filter").submit();
 	});
 
+	var inptQtdd = $(".quantity .qty").attr('type')
+	if (inptQtdd === 'hidden') {
+		$(".woocommerce-variation-add-to-cart .single_add_to_cart_button").addClass('qtdd-hidden');
+	}
+
 });
