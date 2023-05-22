@@ -42,6 +42,7 @@ if( $_POST['has-filter'] == 'true' || is_product_category()){
 ?>
 <aside class="col-lg-3 col-12 filter-sidebar mb-4 pr-lg-0 filter-nandaresende">
 	<form name="form-filter" id="form-filter" action="<?php echo esc_url(home_url('/loja')); ?>" method="post">
+
 		<div class="content-filter-nandaresende <?php echo ($product_cat || $price_filter) ? 'filtro-ativado' : '' ?>">
 		  <?php if ($product_cat || $price_filter || is_product_category()) { ?>
 			<span class="text-center p-2 txt-filter-active">filtro ativado</span>
@@ -57,8 +58,8 @@ if( $_POST['has-filter'] == 'true' || is_product_category()){
 		        <?php $terms = get_terms( 'product_cat', array('hide_empty' => false, 'parent' => 0) );
 		        foreach ( $terms as $term ) : ?>
 		            <li>
-		              <a class="cat-filter <?php echo ($filter['category'] == $term->slug) || ($product_cat == $term->slug) ? 'active' : ''; ?>" data-selected="<?php echo $term->slug ?>">
-		                <?= $term->name ?><small><?= " (".$term->count.")" ?></small>
+                      <a class="cat-filter <?php echo ($filter['category'] == $term->slug) || ($product_cat == $term->slug) ? 'active' : ''; ?>" data-selected="<?php echo $term->slug ?>">
+                          <?= $term->name ?><small><?= " (".$term->count.")" ?></small>
 		              </a>
 		            </li>
 		        <?php endforeach; ?>

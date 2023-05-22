@@ -183,6 +183,7 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
             $product = wc_get_product(get_the_ID());?>
             <div class="item">
                 <div class="product mb-5">
+                    <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                     <div class="content-img-product">
                         <?php $woo_prices = woocommerce_prices($product);
                         if ($woo_prices['on_sale']) { ?>
@@ -207,7 +208,7 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                             <?php } ?>
                         </div>
                     </a>
-                    <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
+                    <?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
                 </div>
             </div>
           <?php endwhile;

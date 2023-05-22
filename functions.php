@@ -152,7 +152,7 @@ function nanda_resende_scripts() {
     wp_localize_script( 'jquery', 'myAjax', array(
         'ajaxurl' => admin_url( 'admin-ajax.php' )
     ));
-    
+
     // wp_enqueue_script('woocommerce-ajax-add-to-cart', get_template_directory_uri() . '/js/ajax-add-to-cart.js', array('jquery'),'1.0' );
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -707,15 +707,58 @@ add_theme_support( 'woocommerce', array(
 /**
  * Desconto para primeira compra
  */
+
+function customize_shipping_methods( $rates ) {
+    $first_order = WC()->session->get( 'first_order' );
+
+    if ((get_field('tipo_do_desconto', 'option') == 'free_shipping') && !(get_field('tipo_do_desconto', 'option') == 'discount_order') && $first_order ) {
+        $free = array();
+
+        foreach ( $rates as $rate_id => $rate ) {
+            if ( 'free_shipping' === $rate->method_id ) {
+                $free[ $rate_id ] = $rate;
+                break;
+            }
+        }
+        return ! empty( $free ) ? $free : $rates;
+    }
+
+    $nofree = array();
+
+    foreach ( $rates as $rate_id => $rate ) {
+        if ( 'free_shipping' != $rate->method_id ) {
+            $nofree[ $rate_id ] = $rate;
+        }
+    }
+
+    return ! empty( $nofree ) ? $nofree : $rates;
+}
+
+function first_order_shipping_free_notice() {
+    $packages = WC()->shipping()->get_packages();
+    $free = false;
+    foreach ($packages[0]['rates'] as $rate) {
+        if ( 'free_shipping' === $rate->method_id ) {
+            $free = true;
+            break;
+        }
+    }
+
+    if (is_checkout() && (get_field('tipo_do_desconto', 'option') === 'free_shipping') && !$free) {
+        $message  = '<strong>' . __("Promoção de primeira compra -", "woocommerce") . '</strong> ';
+        $message .= __("Parabéns! Você ganhou frete gratis!", "woocommerce");
+
+        wc_print_notice( $message, 'success' );
+    }
+}
+
 function wc_first_purchase_discount() {
     $first_order = WC()->session->get( 'first_order' );
-    if ( (!get_field('primeira_compra_ativa', 'option') || !is_user_logged_in()) && !$first_order ) {
+    if ( (!get_field('promocao_de_primeira_compra', 'option') || !is_user_logged_in()) && !$first_order ) {
         return;
     }
 
     global $woocommerce;
-    $discount = get_field('valor_desconto', 'option');
-    $discount_type = get_field('tipo_de_deconto', 'option');
     $customer_id = get_current_user_id();
 
     $order_count = wc_get_customer_order_count( $customer_id );
@@ -723,36 +766,40 @@ function wc_first_purchase_discount() {
         return;
     }
 
-    $max_price = 0;
-    $max_key = null;
-    foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $cart_item ) {
-        $product = $cart_item['data'];
-        $price = $product->get_price();
-        if ( $price > $max_price ) {
-            $max_price = $price;
-            $max_key = $cart_item_key;
-        }
-    }
+    if ((get_field('tipo_do_desconto', 'option') == 'discount_order')) {
+        WC()->session->set('free_rate', null);
+        $discount = get_field('valor_desconto', 'option');
+        $discount_type = get_field('tipo_de_deconto', 'option');
 
-    switch ($discount_type) :
-        case 'fixo' :
-            $woocommerce->cart->add_fee( "Primeira compra", -$discount );
-            break;
-        case 'percent-cart' :
-            $discountCart = $woocommerce->cart->subtotal * ( $discount / 100 );
-            $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'%)', -$discountCart );
-            break;
-        case 'percent-product' :
-            if ( !$max_key ) {
-                break;
+        $max_price = 0;
+        $max_key = null;
+        foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $cart_item ) {
+            $product = $cart_item['data'];
+            $price = $product->get_price();
+            if ( $price > $max_price ) {
+                $max_price = $price;
+                $max_key = $cart_item_key;
             }
-            $discountProduct = $max_price *  ( $discount / 100 );
-            $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'% sob o produto de maior valor)', -$discountProduct );
-            break;
-    endswitch;
-}
+        }
 
-add_action( 'woocommerce_cart_calculate_fees', 'wc_first_purchase_discount' );
+        switch ($discount_type) :
+            case 'fixo' :
+                $woocommerce->cart->add_fee( "Primeira compra", -$discount );
+                break;
+            case 'percent-cart' :
+                $discountCart = $woocommerce->cart->subtotal * ( $discount / 100 );
+                $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'%)', -$discountCart );
+                break;
+            case 'percent-product' :
+                if ( !$max_key ) {
+                    break;
+                }
+                $discountProduct = $max_price *  ( $discount / 100 );
+                $woocommerce->cart->add_fee( 'Primeira compra (-'.$discount.'% sob o produto de maior valor)', -$discountProduct );
+                break;
+        endswitch;
+    }
+}
 
 function update_billing_email() {
     if ( !get_field('primeira_compra_ativa', 'option') && is_user_logged_in() ) {
@@ -769,18 +816,36 @@ function update_billing_email() {
             $order_count = wc_get_customer_order_count( $customer_id );
         }
 
+        global $woocommerce;
+        $woocommerce->cart->calculate_shipping();
+
         if ( $order_count == 0 || !$user ) {
             WC()->session->set('first_order', true);
-            echo 'Promoção primeira compra ativada!';
+            echo "Promoção primeira compra ativada!";
         } else {
             WC()->session->set('first_order', null);
         }
     }
+
+    $packages = WC()->shipping()->get_packages();
+    $rates = customize_shipping_methods( $packages[0]['rates'] );
+    $packages[0]['rates'] = $rates;
+    WC()->session->set( 'shipping_for_package_0', $rates );
+    WC()->shipping()->calculate_shipping_for_package( $packages[0] );
+    WC()->cart->calculate_totals();
+
     die();
 }
 
+add_filter( 'woocommerce_package_rates', 'customize_shipping_methods', 10 );
+add_action( 'woocommerce_cart_calculate_fees', 'wc_first_purchase_discount' );
 add_action('wp_ajax_update_billing_email', 'update_billing_email');
 add_action('wp_ajax_nopriv_update_billing_email', 'update_billing_email');
+add_action( 'woocommerce_before_checkout_form', 'first_order_shipping_free_notice', 10 );
+
+/**
+ * Fim desconto para primeira compra
+ */
 
 function custom_alertify_replace_notices() {
 
@@ -802,8 +867,6 @@ function custom_alertify_replace_notices() {
             }
         }
 
-        //wc_clear_notices();
-
         wp_enqueue_script('nanda-resende-alertify-js', get_template_directory_uri() . '/plugins/alertify/alertify.min.js', array('jquery'), '1.0');
         wp_enqueue_style( 'nanda-resende-alertify-css', get_template_directory_uri() . '/plugins/alertify/alertify.min.css', array(), '1.0');
 
@@ -817,6 +880,71 @@ function custom_alertify_replace_notices() {
     }
 }
 add_action('wp_enqueue_scripts', 'custom_alertify_replace_notices', 999);
+
+/*
+ * Filter products
+ */
+
+add_action( 'pre_get_posts', 'custom_pre_get_posts_query' );
+function custom_pre_get_posts_query( $query ) {
+    if ( $query->is_main_query() && isset( $_POST['cat-filter'] ) && isset( $_POST['price-filter'] ) ) {
+
+        $tax_query = array(
+            'relation' => 'AND',
+            array(
+                'taxonomy' => 'product_cat',
+                'field'    => 'slug',
+                'terms'    => $_POST['cat-filter'],
+            ),
+        );
+
+        if (is_product_category() || is_product_tag()) {
+            $tax_query = array(
+                array(
+                    'taxonomy' => get_query_var( 'taxonomy' ),
+                    'field' => 'slug',
+                    'terms' => get_query_var( 'term' ),
+                )
+            );
+        }
+
+        $meta_query = array(
+            'relation' => 'OR',
+            [
+                'key' => '_regular_price',
+                'value' => $_POST['price-filter'],
+                'type' => 'NUMERIC',
+                'compare' => '<='
+            ],
+            [
+                'key' => '_price',
+                'value' => $_POST['price-filter'],
+                'type' => 'NUMERIC',
+                'compare' => '<='
+            ],
+            [
+                'key' => '_min_variation_price',
+                'value' => $_POST['price-filter'],
+                'type' => 'NUMERIC',
+                'compare' => '<='
+            ],
+            [
+                'key' => '_sale_price',
+                'value' => $_POST['price-filter'],
+                'type' => 'NUMERIC',
+                'compare' => '<='
+            ],
+        );
+
+        $query->set( 'tax_query', $tax_query );
+        $query->set( 'meta_query', $meta_query );
+    }
+}
+
+/*
+ * End filter products
+ */
+
 
 // Preço de Produto variável
 

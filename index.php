@@ -106,6 +106,7 @@ get_header();
                 $product = wc_get_product(get_the_ID()); ?>
 
                 <div class="col-3 product mb-5">
+                    <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                     <div class="content-img-product">
                         <?php $woo_prices = woocommerce_prices($product);
                         if ($woo_prices['on_sale']) { ?>
@@ -130,7 +131,7 @@ get_header();
                             <?php } ?>
                         </div>
                     </a>
-                    <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
+                    <?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
                 </div>
               <?php endwhile; ?>
               <?php wp_reset_postdata(); ?>
@@ -166,6 +167,7 @@ get_header();
             $product = wc_get_product(get_the_ID()); ?>
             <div class="item">
                 <div class="product mb-5">
+                    <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                     <div class="content-img-product">
                         <?php $woo_prices = woocommerce_prices($product);
                         if ($woo_prices['on_sale']) { ?>
@@ -190,7 +192,7 @@ get_header();
                             <?php } ?>
                         </div>
                     </a>
-                    <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
+                    <?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
                 </div>
             </div>
           <?php endwhile;
@@ -218,6 +220,7 @@ get_header();
             $wc_query->the_post();
             $product = wc_get_product(get_the_ID()); ?>
             <div class="col-3 product mb-5">
+                <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                 <div class="content-img-product">
                     <?php $woo_prices = woocommerce_prices($product);
                     if ($woo_prices['on_sale']) { ?>
@@ -242,7 +245,7 @@ get_header();
                         <?php } ?>
                     </div>
                 </a>
-                <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
+                <?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
             </div>
           <?php endwhile; ?>
           <?php wp_reset_postdata(); ?>
@@ -258,6 +261,7 @@ get_header();
             $product = wc_get_product(get_the_ID()); ?>
             <div class="item">
                 <div class="product mb-5">
+                    <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                     <div class="content-img-product">
                         <?php $woo_prices = woocommerce_prices($product);
                         if ($woo_prices['on_sale']) { ?>
@@ -282,7 +286,7 @@ get_header();
                             <?php } ?>
                         </div>
                     </a>
-                    <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
+                    <?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
                 </div>
             </div>
           <?php endwhile;
@@ -322,6 +326,7 @@ get_header();
             $wc_query->the_post();
             $product = wc_get_product(get_the_ID()); ?>
             <div class="col-3 product mb-5">
+                <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                 <div class="content-img-product">
                     <?php $woo_prices = woocommerce_prices($product);
                     if ($woo_prices['on_sale']) { ?>
@@ -346,7 +351,7 @@ get_header();
                         <?php } ?>
                     </div>
                 </a>
-                <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
+                <?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
             </div>
           <?php endwhile; ?>
           <?php wp_reset_postdata(); ?>
@@ -368,6 +373,7 @@ get_header();
             $product = wc_get_product(get_the_ID()); ?>
             <div class="item">
                 <div class="product mb-5">
+                    <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                     <div class="content-img-product">
                         <?php $woo_prices = woocommerce_prices($product);
                         if ($woo_prices['on_sale']) { ?>
@@ -392,7 +398,7 @@ get_header();
                             <?php } ?>
                         </div>
                     </a>
-                    <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
+                    <?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
                 </div>
             </div>
           <?php endwhile;

@@ -1141,9 +1141,37 @@ jQuery(document).ready(function ($) {
 		$(this).addClass("active");
 		var category = $(this).attr('data-selected');
 		$("input[name=cat-filter]").val(category);
+		//$("#sidebar-filter").change();
+		//$(this > 'input[type="radio"]').selected();
 
 		$("#form-filter").submit();
 	});
+
+	/*$("#sidebar-filter").change(function() {
+		const category = $("input[name=cat-filter]").val();
+		const ajaxurl = $("input[name=url-ajax]").val();
+		const inpt_price = $(".content-filter-nandaresende input[type=range]");
+		const min_price = inpt_price.attr('min');
+		const max_price = inpt_price.val();
+
+		console.log("filtro alterado! categoria:"+category+", preço min:"+min_price+", preço max:"+max_price);
+
+		$.ajax({
+			url: ajaxurl,
+			type: 'POST',
+			data: {
+				action: 'filter_products',
+				category: category,
+				min_price: min_price,
+				max_price: max_price
+			},
+			success: function(response) {
+				console.log("Lista de produtos: "+response);
+				// Atualize a listagem de produtos com os resultados filtrados
+				$('.products').html(response);
+			}
+		});
+	});*/
 
 	$("#cat-filter-select").on('change', (function(e){
 		e.preventDefault();

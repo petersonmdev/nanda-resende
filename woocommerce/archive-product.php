@@ -17,6 +17,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+global $woocommerce;
+
 get_header( 'shop' );
 
 /**
@@ -149,6 +151,14 @@ if (!empty($price_filter)) {
                             <?php $wc_query = new WP_Query($args);
 
                             if ( $wc_query->have_posts() ) :
+
+                                global $wp_query;
+                                $original_query = $wp_query;
+
+                                $wp_query->set( 'tax_query', $wc_query->tax_query->queries );
+                                $wp_query->set( 'meta_query', $wc_query->meta_query->queries );
+
+
                                 /**
                                  * Hook: woocommerce_before_shop_loop.
                                  *
@@ -157,6 +167,8 @@ if (!empty($price_filter)) {
                                  * @hooked woocommerce_catalog_ordering - 30
                                  */
                                 do_action( 'woocommerce_before_shop_loop' );
+
+                                $wp_query = $original_query;
 
                                 woocommerce_product_loop_start();
 
@@ -173,9 +185,11 @@ if (!empty($price_filter)) {
                                     }
                                 }
 
-                                woocommerce_product_loop_end(); ?>
+                                woocommerce_product_loop_end();
 
-                                <?php
+                                wp_reset_postdata();
+
+
                                 /**
                                  * Hook: woocommerce_after_shop_loop.
                                  *

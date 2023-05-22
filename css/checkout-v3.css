@@ -1776,8 +1776,9 @@ p#billing_cellphone_field {
     color: #752566;
 }
 
-#order_review {
-    width: calc(50% - 30px) !important;
+#order_review,
+.wpmc-step-item #order_review {
+    width: calc(50% - 30px)!important;
     float: left;
     margin-top: 60px;
 }
