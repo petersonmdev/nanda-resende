@@ -280,8 +280,6 @@ function add_additional_class_on_link($classes, $item, $args) {
 add_filter('nav_menu_css_class', 'add_additional_class_on_link', 10, 4);
 
 
-
-
 if( function_exists('acf_add_options_page') ) {
     acf_add_options_page(array(
         'page_title'    => 'Home Banner´s',
@@ -300,6 +298,17 @@ if( function_exists('acf_add_options_page') ) {
         'menu_slug'     => 'primeira-compra',
         'capability'    => 'edit_posts',
         'icon_url'      => 'dashicons-money-alt',
+        'redirect'      => false
+    ));
+}
+
+if( function_exists('acf_add_options_page') ) {
+    acf_add_options_page(array(
+        'page_title'    => 'Frete gratis',
+        'menu_title'    => 'Frete grátis',
+        'menu_slug'     => 'frete-gratis',
+        'capability'    => 'edit_posts',
+        'icon_url'      => 'dashicons-location-alt',
         'redirect'      => false
     ));
 }
@@ -340,33 +349,7 @@ function getMinMaxPrice(){
     $max = get_post_meta($loop->posts[0]->ID, '_price', true);
     $min = get_post_meta($loop->posts[$i]->ID, '_price', true);
     return ['min' => $min, 'max' => $max];
-}  
-
-// Vinculando Classe de entrega 'frete-gratuito' com os produtos
-/*function my_wc_free_shipping_by_shipping_class( $rates, $package ) {
-    $shipping_class = 'entrega-gratuita'; // Slug da sua classe de entrega.
-    $allow_free_shipping = true;
-    //$states = array("GO", "TO", "MT", "MG", "SP", "RJ", "ES");
-    // Verifica se todos os produtos precisam ser entregues e se possuem a class de entrega selecionada.
-    foreach ( $package['contents'] as $value ) {
-        $product = $value['data'];
-        if ( $product->needs_shipping() && $shipping_class !== $product->get_shipping_class() ) {
-            $allow_free_shipping = false;
-            break;
-        }
-    }
-    // Remove a entrega gratuita se algum produto não possuir a classe de entrega selecionada.
-    if ( ! $allow_free_shipping ) {
-        foreach ( $rates as $rate_id => $rate ) {
-            if ( 'free_shipping' === $rate->method_id ) {
-                unset( $rates[ $rate_id ] );
-                break;
-            }
-        }
-    }
-    return $rates;
 }
-add_filter( 'woocommerce_package_rates', 'my_wc_free_shipping_by_shipping_class', 100, 2 );*/
 
 // Ajustando o layout do checkout
 add_filter( 'woocommerce_checkout_fields' , 'amit_checkout_fields_styling', 10 );
@@ -566,7 +549,7 @@ function my_wc_mini_cart_content(){
         <li class="cart-items subtotal">
             <div>
                 <h5 class="text-center subtotal-text">
-                Subtotal: <span id="cart-subtotal"><?php echo WC()->cart->get_total() ?></span>
+                Subtotal: <span id="cart-subtotal"><?php echo 'R$ '.number_format(WC()->cart->get_subtotal(), 2,","); ?></span>
                 </h5>
             </div>
         </li>
@@ -624,30 +607,30 @@ function my_header_add_to_cart_fragment( $fragments ) {
 
 function get_product_regular_price($variation_id) {
 
-    global $woocommerce; 
+    global $woocommerce;
     $product = new WC_Product_Variation($variation_id);
-    return $product->get_regular_price(); 
+    return $product->get_regular_price();
 }
 
 function get_product_min_price($variation_id) {
 
-    global $woocommerce; 
+    global $woocommerce;
     $product = new WC_Product_Variation($variation_id);
-    return $product->get_price(); 
+    return $product->get_price();
 }
 
 function get_product_descricao($variation_id) {
 
-    global $woocommerce; 
+    global $woocommerce;
     $product = new WC_Product_Variation($variation_id);
-    return $product->get_variation_attributes(); 
+    return $product->get_variation_attributes();
 }
 
 function get_product_ref($variation_id) {
 
-    global $woocommerce; 
+    global $woocommerce;
     $product = new WC_Product_Variation($variation_id);
-    return $product->get_description(); 
+    return $product->get_description();
 }
 
 
@@ -708,10 +691,54 @@ add_theme_support( 'woocommerce', array(
  * Desconto para primeira compra
  */
 
+function free_shipping_promo() {
+    $free_shipping_promo = get_field('habilitar_frete_gratis', 'option');
+
+    if (!$free_shipping_promo) {
+        return false;
+    }
+
+    $condition_type = get_field('condicao_para_habilitar_frete_gratis', 'option');
+
+    switch ($condition_type) :
+        case 'minimum_order' :
+            $total_cart = WC()->cart->get_subtotal();
+            $minimum_order_value = get_field('valor_minimo_de_pedido', 'option');
+            return $total_cart >= $minimum_order_value;
+
+        case 'all_store' :
+            return true;
+
+        case 'category' :
+            $category_ids = get_field('selecione_a_categoria', 'option');
+            $cart_items = WC()->cart->get_cart();
+            foreach ($cart_items as $cart_item) {
+                $product_id = $cart_item['product_id'];
+                $product_categories = get_the_terms($product_id, 'product_cat');
+
+                if ($product_categories && !is_wp_error($product_categories)) {
+                    foreach ($product_categories as $category) {
+                        $cart_category_ids[] = $category->term_id;
+                    }
+                }
+            }
+
+            foreach ($cart_category_ids as $cart_category_id) {
+                if (!in_array($cart_category_id, $category_ids)) {
+                    return false;
+                }
+            }
+            return true;
+        default :
+            return false;
+    endswitch;
+}
+
 function customize_shipping_methods( $rates ) {
     $first_order = WC()->session->get( 'first_order' );
+    $free_shipping_first_order = (get_field('promocao_de_primeira_compra', 'option') && get_field('tipo_do_desconto', 'option') == 'free_shipping') ? true : false;
 
-    if ((get_field('tipo_do_desconto', 'option') == 'free_shipping') && !(get_field('tipo_do_desconto', 'option') == 'discount_order') && $first_order ) {
+    if (( $free_shipping_first_order && $first_order ) || free_shipping_promo()) {
         $free = array();
 
         foreach ( $rates as $rate_id => $rate ) {
@@ -720,6 +747,7 @@ function customize_shipping_methods( $rates ) {
                 break;
             }
         }
+
         return ! empty( $free ) ? $free : $rates;
     }
 
@@ -734,26 +762,51 @@ function customize_shipping_methods( $rates ) {
     return ! empty( $nofree ) ? $nofree : $rates;
 }
 
-function first_order_shipping_free_notice() {
-    $packages = WC()->shipping()->get_packages();
-    $free = false;
-    foreach ($packages[0]['rates'] as $rate) {
-        if ( 'free_shipping' === $rate->method_id ) {
-            $free = true;
-            break;
-        }
-    }
+function display_custom_shipping_message() {
 
-    if (is_checkout() && (get_field('tipo_do_desconto', 'option') === 'free_shipping') && !$free) {
-        $message  = '<strong>' . __("Promoção de primeira compra -", "woocommerce") . '</strong> ';
-        $message .= __("Parabéns! Você ganhou frete gratis!", "woocommerce");
+    if (free_shipping_promo()) {
 
-        wc_print_notice( $message, 'success' );
+        $message  = '<strong>' . __("Parabéns! Você ganhou frete grátis!", "woocommerce") . '</strong> ';
+        $condition_type = get_field('condicao_para_habilitar_frete_gratis', 'option');
+
+        switch ($condition_type) :
+            case 'minimum_order' :
+                $message .= __("Pois seu pedido tem valor igual ou maior que R$".get_field('valor_minimo_de_pedido', 'option'), "woocommerce");
+                wc_print_notice( $message, 'success' );
+                break;
+
+            case 'all_store' :
+                $message .= __("Aproveite, pois todos produtos da loja estão com frete grátis!", "woocommerce");
+                wc_print_notice( $message, 'success' );
+                break;
+
+            case 'category' :
+                $category_ids = get_field('selecione_a_categoria', 'option');
+                $message .= __("Aproveite, pois todos os produtos da(s) categoria(s) ", "woocommerce");
+                $args = array(
+                    'taxonomy' => 'product_cat',
+                    'include'  => $category_ids,
+                );
+                $categories = get_terms($args);
+
+                foreach ($categories as $category) {
+                    $message .= '<strong>' . __("$category->name, ", "woocommerce") . '</strong>';
+                }
+                $message .= __("estão com frete grátis", "woocommerce");
+                wc_print_notice( $message, 'success' );
+                break;
+
+            default :
+                wc_print_notice( $message, 'success' );
+                break;
+
+        endswitch;
     }
 }
 
 function wc_first_purchase_discount() {
     $first_order = WC()->session->get( 'first_order' );
+    $free_shipping_first_order = (get_field('promocao_de_primeira_compra', 'option') && get_field('tipo_do_desconto', 'option') == 'free_shipping') ? true : false;
     if ( (!get_field('promocao_de_primeira_compra', 'option') || !is_user_logged_in()) && !$first_order ) {
         return;
     }
@@ -766,8 +819,7 @@ function wc_first_purchase_discount() {
         return;
     }
 
-    if ((get_field('tipo_do_desconto', 'option') == 'discount_order')) {
-        WC()->session->set('free_rate', null);
+    if (get_field('promocao_de_primeira_compra', 'option') && (get_field('tipo_do_desconto', 'option') == 'discount_order')) {
         $discount = get_field('valor_desconto', 'option');
         $discount_type = get_field('tipo_de_deconto', 'option');
 
@@ -799,6 +851,18 @@ function wc_first_purchase_discount() {
                 break;
         endswitch;
     }
+
+    if ($free_shipping_first_order && !free_shipping_promo()) {
+        $woocommerce->cart->add_fee( __("Parabéns! Pela sua primeira compra, você ganhou frete grátis!", "woocommerce"), null);
+    }
+
+}
+
+function change_first_order_fee_label( $safe_text, $text ){
+    if( ( is_cart() || is_checkout() ) && $text == 'Parabéns! Pela sua primeira compra, você ganhou frete grátis!' ){
+        $safe_text = '<strong class="free_shipping_first_order_text">Parabéns! você ganhou frete grátis!<strong><small class="d-block">Uma contesia pela sua primeira compra.</small>';
+    }
+    return $safe_text;
 }
 
 function update_billing_email() {
@@ -821,7 +885,7 @@ function update_billing_email() {
 
         if ( $order_count == 0 || !$user ) {
             WC()->session->set('first_order', true);
-            echo "Promoção primeira compra ativada!";
+            echo "primeira compra detectada";
         } else {
             WC()->session->set('first_order', null);
         }
@@ -839,9 +903,10 @@ function update_billing_email() {
 
 add_filter( 'woocommerce_package_rates', 'customize_shipping_methods', 10 );
 add_action( 'woocommerce_cart_calculate_fees', 'wc_first_purchase_discount' );
-add_action('wp_ajax_update_billing_email', 'update_billing_email');
-add_action('wp_ajax_nopriv_update_billing_email', 'update_billing_email');
-add_action( 'woocommerce_before_checkout_form', 'first_order_shipping_free_notice', 10 );
+add_action( 'wp_ajax_update_billing_email', 'update_billing_email');
+add_action( 'wp_ajax_nopriv_update_billing_email', 'update_billing_email');
+add_action( 'woocommerce_before_checkout_form', 'display_custom_shipping_message' );
+add_filter( 'esc_html', 'change_first_order_fee_label', 10, 2 );
 
 /**
  * Fim desconto para primeira compra
@@ -851,7 +916,6 @@ function custom_alertify_replace_notices() {
 
     if (wc_notice_count() > 0) {
         $alerts = array();
-
         $categories = array('error', 'info', 'warning', 'success');
 
         foreach ($categories as $category) {
@@ -872,7 +936,6 @@ function custom_alertify_replace_notices() {
 
         wp_add_inline_script('nanda-resende-alertify-js', 'jQuery(function($) {
             var alerts = ' . wp_json_encode($alerts) . ';
-            console.log(alerts);
             alerts.forEach(function(alert) {
                 alertify.notify(alert.message, alert.type, 15, );
             });

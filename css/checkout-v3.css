@@ -111,7 +111,7 @@ label[for='billing_sex'] {
 
 #main-container>div>div>div:nth-child(2)>div>div>p {
     text-align: center;
-    color: #8fae1b;
+    color: #00720B;
     margin-bottom: 50px;
     font-size: 1.2em;
 }
@@ -128,7 +128,7 @@ label[for='billing_sex'] {
 }
 
 #place_order {
-    background: #078E0B;
+    background: #00720B;
 }
 
 #btn-cart,
@@ -387,7 +387,7 @@ body.woocommerce-checkout .form-row {
 .select2-container--default .select2-results__option--highlighted:hover,
 .select2-container--default .select2-results__option--highlighted:focus,
 .select2-container--default .select2-results__option--highlighted:active {
-    background-color: #0f834d !important;
+    background-color: #00720B !important;
     border: none !important;
     outline: none !important;
 }
@@ -413,7 +413,7 @@ body.woocommerce-checkout .form-row {
 .woocommerce form .form-row.woocommerce-validated input.input-text,
 .woocommerce form .form-row.woocommerce-validated select,
 .woocommerce form .form-row.woocommerce-validated .select2-container span.selection>span {
-    border: 1px solid #0f834d !important;
+    border: 1px solid #00720B !important;
 }
 
 .woocommerce form .form-row.woocommerce-invalid .select2-container,
@@ -641,7 +641,7 @@ input:valid ~ label {
     color: #212529;
     width: 100%;
     border-width: 3px;
-    border-color: #749c28;
+    border-color: #00720B;
     border-style: solid;
 }
 
@@ -650,7 +650,7 @@ input:valid ~ label {
     background: #c8d8aa;
     border-top: none !important;
     border-width: 3px;
-    border-color: #749c28;
+    border-color: #00720B;
     border-style: solid;
 }
 
@@ -771,7 +771,7 @@ body.woocommerce-order-received .woocommerce-message a.button {
 }
 
 body.woocommerce-order-received .woocommerce-message a.button:hover {
-    background: #739b27;
+    background: #00720B;
     border-bottom: 2px solid #444;
     transition: ease-in-out .3s
 }
@@ -1109,7 +1109,7 @@ input[id=credit-card]:checked::before,
 input[id=banking-ticket]:checked::before,
 input[id=pix]:checked::before {
     content: "";
-    background: #8bc34a
+    background: #00720B
 }
 
 #payment input[id=credit-card]:checked::after,
@@ -1403,7 +1403,7 @@ body.woocommerce-checkout #payment ul.payment_methods {
 
 #main-container>div>div>div:nth-child(2)>div>div>p {
     text-align: center;
-    color: #8fae1b;
+    color: #00720B;
     margin-bottom: 50px;
     font-size: 1.2em
 }
@@ -1420,7 +1420,7 @@ body.woocommerce-checkout #payment ul.payment_methods {
 }
 
 #place_order {
-    background: #228B22
+    background: #00720B
 }
 
 #btn-cart,
@@ -1433,9 +1433,9 @@ body.woocommerce-checkout #payment ul.payment_methods {
 
 #btn-two,
 #btn-three {
-    background: #64ad6a;
+    background: #00720B;
     color: #fff;
-    border: 1px solid #64ad6a;
+    border: 1px solid #00720B;
 }
 
 #tab-one>h3,
@@ -1648,7 +1648,7 @@ p#billing_cellphone_field {
 .woocommerce-order .woocommerce-thankyou-order-received {
     font-size: 1.3em;
     font-weight: 700;
-    color: #739b27;
+    color: #00720B;
     line-height: 1.3em;
     text-align: center;
 }
@@ -1672,7 +1672,7 @@ p#billing_cellphone_field {
 }
 
 .woocommerce-checkout .woocommerce form.login button.woocommerce-form-login__submit {
-    background: #749c28;
+    background: #00720B;
     padding: 15px;
     width: 100%;
 }
@@ -1691,9 +1691,9 @@ p#billing_cellphone_field {
     padding-left: 25px;
     padding-right: 25px;
     margin: 0;
-    color: #749c28!important;
+    color: #00720B!important;
     background: none!important;
-    border: solid 2px #749c28;
+    border: solid 2px #00720B;
     margin-right: 0;
     margin-left: auto;
 }
@@ -1703,10 +1703,10 @@ p#billing_cellphone_field {
     padding-left: 25px;
     padding-right: 25px;
     margin: 0;
-    color: #749c28!important;
+    color: #00720B!important;
     background: none!important;
     margin-right: auto;
-    border: solid 2px #749c28;
+    border: solid 2px #00720B;
     margin-left: 0;
 }
 
@@ -1716,7 +1716,7 @@ p#billing_cellphone_field {
     padding-right: 25px;
     margin: 0;
     color: #fff!important;
-    background: #64ad6a!important;
+    background: #00720B!important;
     margin-right: 0;
     margin-left: auto;
 }
@@ -1845,12 +1845,48 @@ p#billing_cellphone_field {
     padding-left: 25px;
     padding-right: 25px;
     margin: 0;
-    color: #749c28;
+    color: #00720B;
     background: none;
-    border: solid 2px #749c28;
+    border: solid 2px #00720B;
 }
 
-form.checkout_coupon.woocommerce-form-coupon,
+form.checkout_coupon.woocommerce-form-coupon {
+    border: none!important;
+    background-color: #f7f6f7;
+    padding: 15px!important;
+    color: #000;
+    max-width: 400px;
+    margin-bottom: 20px!important;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.checkout_coupon.woocommerce-form-coupon p:first-child {
+    width: 100%;
+    line-height: initial;
+}
+
+.checkout_coupon.woocommerce-form-coupon p.form-row {
+    margin: 0!important;
+    flex: 0 0 50%;
+}
+
+.checkout_coupon.woocommerce-form-coupon p.form-row input {
+    border: none!important;
+}
+
+.checkout_coupon.woocommerce-form-coupon p.form-row button {
+    height: 55px;
+    padding-left: 25px;
+    padding-right: 25px;
+    margin: 0;
+    color: #fff;
+    background: #1e85be;
+    width: 100%;
+    border:none!important;
+}
+
 table.shop_table.woocommerce-checkout-review-order-table {
     border: none!important;
     background-color: #efefef;
