@@ -51,7 +51,6 @@ label 				 {
   color:#999;
   font-weight:normal;
   position:absolute;
-  pointer-events:none;
   left:5px;
   top:10px;
   max-height: 1.33em;

@@ -1062,7 +1062,8 @@ body.woocommerce-checkout #shipping_method li {
 }
 
 
-li.wc_payment_method.pagarme-method {
+li.wc_payment_method.pagarme-method,
+li.wc_payment_method.payment_method_woo-pagarme-payments-credit_card {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -1086,7 +1087,9 @@ body.woocommerce-checkout #shipping_method li p {
 
 input[id=credit-card]::before,
 input[id=banking-ticket]::before,
-input[id=pix]::before {
+input[id=pix]::before,
+input[id=payment_method_woo-pagarme-payments-credit_card]::before,
+input[id=payment_method_woo-pagarme-payments-pix]::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1100,21 +1103,27 @@ input[id=pix]::before {
 
 input[id=credit-card]::before,
 input[id=banking-ticket]::before,
-input[id=pix]::before {
+input[id=pix]::before,
+input[id=payment_method_woo-pagarme-payments-credit_card]::before,
+input[id=payment_method_woo-pagarme-payments-pix]::before {
     top: -4px !important;
     left: -4px !important;
 }
 
 input[id=credit-card]:checked::before,
 input[id=banking-ticket]:checked::before,
-input[id=pix]:checked::before {
+input[id=pix]:checked::before,
+input[id=payment_method_woo-pagarme-payments-credit_card]:checked::before,
+input[id=payment_method_woo-pagarme-payments-pix]:checked::before {
     content: "";
     background: #00720B
 }
 
 #payment input[id=credit-card]:checked::after,
 #payment input[id=banking-ticket]:checked::after,
-#payment input[id=pix]:checked::after {
+#payment input[id=pix]:checked::after,
+#payment input[id=payment_method_woo-pagarme-payments-credit_card]:checked::after,
+#payment input[id=payment_method_woo-pagarme-payments-pix]:checked::after {
     position: absolute;
     width: 25px;
     top: -6px;
@@ -1127,7 +1136,9 @@ input[id=pix]:checked::before {
 
 #payment input[id=credit-card]:checked::after,
 #payment input[id=banking-ticket]:checked::after,
-#payment input[id=pix]:checked::after {
+#payment input[id=pix]:checked::after,
+#payment input[id=payment_method_woo-pagarme-payments-credit_card]:checked::after,
+#payment input[id=payment_method_woo-pagarme-payments-pix]:checked::after {
     top: -9px !important;
     left: 0 !important;
 }
@@ -1171,37 +1182,62 @@ input[id=pix]:checked::before {
     left: -3px
 }
 
-#payment.woocommerce-checkout-payment ul li.pagarme-method label {
+.wc-credit-card-info {
+    background: #dfdcde;
+    padding: 20px 15px;
+    border-radius: 5px;
+}
+
+.wc-credit-card-info label {
+    position: initial;
+    background: none !important;
+    color: #000!important;
+    font-weight: normal!important;
+    line-height: 1!important;
+    margin: 0 0 10px!important;
+    padding: 0!important;
+}
+
+#payment .payment_methods li[class*="pagarme"] .payment_box fieldset {
+    margin: 0;
+}
+
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] label,
+#payment.woocommerce-checkout-payment ul li.payment_method_woo-pagarme-payments-credit_card label,
+#payment.woocommerce-checkout-payment ul li.payment_method_woo-pagarme-payments-pix label {
     margin: 20px 0 0 25px;
     display: block;
     font-size: 1.3em;
     font-weight: 700;
     padding: 0!important;
     color: #bbb;
+    cursor: pointer;
 }
 
-#payment.woocommerce-checkout-payment ul li.pagarme-method input#credit-card,
-#payment.woocommerce-checkout-payment ul li.pagarme-method input#pix {
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] input#credit-card,
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] input#pix,
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] input[type='radio'] {
     position: absolute;
     top: 10px;
 }
 
-#payment.woocommerce-checkout-payment ul li.pagarme-method input[type='radio']:checked+label {
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] input[type='radio']:checked+label {
     color:#000!important
 }
 
-.woocommerce-checkout #payment .payment_box.payment_method_woo-pagarme-payments::before {
+.woocommerce-checkout #payment .payment_box.payment_box .payment_method_woo-pagarme-payments-pix::before,
+.woocommerce-checkout #payment .payment_box.payment_box .payment_method_woo-pagarme-payments-credit_card::before {
     display: none!important;
 }
 
-#payment.woocommerce-checkout-payment ul li.pagarme-method .payment_box {
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] .payment_box {
     background: rgb(223, 220, 222) !important;
     padding: 10px !important;
     border-radius: 5px;
 }
 
-#payment.woocommerce-checkout-payment ul li.pagarme-method .payment_box input,
-#payment.woocommerce-checkout-payment ul li.pagarme-method .payment_box select {
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] .payment_box input,
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] .payment_box select {
     border-radius: 5px !important;
     width: 100%;
     min-height: inherit;
@@ -1209,12 +1245,12 @@ input[id=pix]:checked::before {
     position: relative;
 }
 
-#payment.woocommerce-checkout-payment ul li.pagarme-method .payment_box .form-row.woocommerce-validated input,
-#payment.woocommerce-checkout-payment ul li.pagarme-method .payment_box .form-row.woocommerce-validated select {
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] .payment_box .form-row.woocommerce-validated input,
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] .payment_box .form-row.woocommerce-validated select {
 
 }
 
-#payment.woocommerce-checkout-payment ul li.pagarme-method .payment_box fieldset label {
+#payment.woocommerce-checkout-payment ul li[class*="pagarme"] .payment_box fieldset label {
     margin: 0 0 8px;
     padding: 0;
     background: none;

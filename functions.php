@@ -545,11 +545,13 @@ function my_wc_mini_cart_content(){
             <?php
         }
     endforeach;
-    if ($cart) { ?>
+    if ($cart) {
+        $subtotal = number_format(WC()->cart->get_subtotal(), 2,",");
+        ?>
         <li class="cart-items subtotal">
             <div>
                 <h5 class="text-center subtotal-text">
-                Subtotal: <span id="cart-subtotal"><?php echo 'R$ '.number_format(WC()->cart->get_subtotal(), 2,","); ?></span>
+                Subtotal: <span id="cart-subtotal"><?php echo 'R$ '.$subtotal; ?></span>
                 </h5>
             </div>
         </li>
