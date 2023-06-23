@@ -75,30 +75,23 @@ get_header();
     <div class="row align-items-center">
       <div class="col-md-12">
         <div class="section-title my-5">
-          <h3>Destaques</h3>
+          <h3>Promoções</h3>
         </div>
+      </div>
       <div class="d-none d-lg-flex">
             <?php
-            $meta_query  = WC()->query->get_meta_query();
-            $tax_query   = WC()->query->get_tax_query();
-            $tax_query[] = array(
-                'taxonomy' => 'product_visibility',
-                'field'    => 'name',
-                'terms'    => 'featured',
-                'operator' => 'IN',
-            );
 
             $params = array(
-                'post_type'           => 'product',
-                'post_status'         => 'publish',
-                'showposts'           => 4,
-                'ignore_sticky_posts' => 1,
-                'posts_per_page'      => $atts['per_page'],
-                'orderby'             => 'rand',
-                'order'               => $atts['order'],
-                'meta_query'          => $meta_query,
-                'tax_query'           => $tax_query,
+                'post_type' => 'product',
+                'post_status' => 'publish',
+                'posts_per_page' => 4,
+                'meta_key'  	=> 'total_sales',
+                'orderby'   	=> 'rand',
+                'order' 		=> 'desc',
+                'meta_query' => WC()->query->get_meta_query(),
+                'post__in' => array_merge(array(0), wc_get_product_ids_on_sale())
             );
+
             $wc_query = new WP_Query($params); ?>
             <?php if ($wc_query->have_posts()) : ?>
               <?php while ($wc_query->have_posts()) :
@@ -109,8 +102,9 @@ get_header();
                     <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                     <div class="content-img-product">
                         <?php $woo_prices = woocommerce_prices($product);
-                        if ($woo_prices['on_sale']) { ?>
-                            <span class="badge-sale">Promoção</span>
+                        if ($woo_prices['on_sale']) {
+                            $off = 100-($woo_prices['sale_price']*100)/$woo_prices['regular_price'];?>
+                            <span class="badge-sale"><?= "$off% OFF" ?></span>
                         <?php } ?>
                         <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                         <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
@@ -120,13 +114,22 @@ get_header();
                         <div class="product-name pt-2"><?php the_title() ?></div>
                         <div class="content-prices d-flex pb-2 pt-3">
                             <?php if ($woo_prices['type'] == 'variable') { ?>
-                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                                <div class="price price-variation">
+                                    <?php echo do_shortcode('[product_price]'); ?>
+                                    <?php if ($woo_prices['on_sale']) { ?>
+                                        <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></small>
+                                    <?php } else { ?>
+                                        <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></small>
+                                    <?php } ?>
+                                </div>
                             <?php } else { ?>
                                 <?php if ($woo_prices['on_sale']) { ?>
-                                    <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
-                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
+                                    <div class="last-price"><s>R$ <?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></s></div>
+                                    <div class="price">R$<?php echo number_format((float)$woo_prices['sale_price'], 2, ',', ''); ?></div>
+                                    <div class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></div>
                                 <?php } else { ?>
-                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
+                                    <div class="price">R$<?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></div>
+                                    <div class="installment">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></div>
                                 <?php } ?>
                             <?php } ?>
                         </div>
@@ -136,30 +139,20 @@ get_header();
               <?php endwhile; ?>
               <?php wp_reset_postdata(); ?>
             <?php endif; ?>
-          </div>
       </div>
       <div class="d-md-block col-md-12 d-lg-none carousel-mobile-nandaresende">
         <div id="destaques" class="owl-carousel owl-theme owl-loaded owl-drag">
           <?php
-          $meta_query  = WC()->query->get_meta_query();
-          $tax_query   = WC()->query->get_tax_query();
-          $tax_query[] = array(
-              'taxonomy' => 'product_visibility',
-              'field'    => 'name',
-              'terms'    => 'featured',
-              'operator' => 'IN',
-          );
-
           $params = array(
-              'post_type'           => 'product',
-              'post_status'         => 'publish',
-              'showposts'           => 15,
+              'post_type' => 'product',
+              'post_status' => 'publish',
+              'posts_per_page' => 15,
               'ignore_sticky_posts' => 1,
-              'posts_per_page'      => $atts['per_page'],
+              'meta_key'  	=> 'total_sales',
               'orderby'             => 'rand',
-              'order'               => $atts['order'],
-              'meta_query'          => $meta_query,
-              'tax_query'           => $tax_query,
+              'order' 		=> 'desc',
+              'meta_query' => WC()->query->get_meta_query(),
+              'post__in' => array_merge(array(0), wc_get_product_ids_on_sale())
           );
           $wc_query = new WP_Query($params);
           while ($wc_query->have_posts()) :
@@ -170,8 +163,9 @@ get_header();
                     <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                     <div class="content-img-product">
                         <?php $woo_prices = woocommerce_prices($product);
-                        if ($woo_prices['on_sale']) { ?>
-                            <span class="badge-sale">Promoção</span>
+                        if ($woo_prices['on_sale']) {
+                            $off = 100-($woo_prices['sale_price']*100)/$woo_prices['regular_price'];?>
+                            <span class="badge-sale"><?= "$off% OFF" ?></span>
                         <?php } ?>
                         <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                         <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
@@ -181,13 +175,22 @@ get_header();
                         <div class="product-name pt-2"><?php the_title() ?></div>
                         <div class="content-prices d-flex pb-2 pt-3">
                             <?php if ($woo_prices['type'] == 'variable') { ?>
-                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                                <div class="price price-variation">
+                                    <?php echo do_shortcode('[product_price]'); ?>
+                                    <?php if ($woo_prices['on_sale']) { ?>
+                                        <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></small>
+                                    <?php } else { ?>
+                                        <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></small>
+                                    <?php } ?>
+                                </div>
                             <?php } else { ?>
                                 <?php if ($woo_prices['on_sale']) { ?>
-                                    <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
-                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
+                                    <div class="last-price"><s>R$ <?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></s></div>
+                                    <div class="price">R$<?php echo number_format((float)$woo_prices['sale_price'], 2, ',', ''); ?></div>
+                                    <div class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></div>
                                 <?php } else { ?>
-                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
+                                    <div class="price">R$<?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></div>
+                                    <div class="installment">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></div>
                                 <?php } ?>
                             <?php } ?>
                         </div>
@@ -199,8 +202,8 @@ get_header();
           wp_reset_postdata(); ?>
         </div>
       </div>
-  </div>
     </div>
+  </div>
 </section>
 
 <section class="section-products-featured section section-nandaresende">
@@ -223,8 +226,9 @@ get_header();
                 <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                 <div class="content-img-product">
                     <?php $woo_prices = woocommerce_prices($product);
-                    if ($woo_prices['on_sale']) { ?>
-                        <span class="badge-sale">Promoção</span>
+                    if ($woo_prices['on_sale']) {
+                        $off = 100-($woo_prices['sale_price']*100)/$woo_prices['regular_price'];?>
+                        <span class="badge-sale"><?= "$off% OFF" ?></span>
                     <?php } ?>
                     <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                     <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
@@ -234,13 +238,22 @@ get_header();
                     <div class="product-name pt-2"><?php the_title() ?></div>
                     <div class="content-prices d-flex pb-2 pt-3">
                         <?php if ($woo_prices['type'] == 'variable') { ?>
-                            <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                            <div class="price price-variation">
+                                <?php echo do_shortcode('[product_price]'); ?>
+                                <?php if ($woo_prices['on_sale']) { ?>
+                                    <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></small>
+                                <?php } else { ?>
+                                    <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></small>
+                                <?php } ?>
+                            </div>
                         <?php } else { ?>
                             <?php if ($woo_prices['on_sale']) { ?>
-                                <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
-                                <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
+                                <div class="last-price"><s>R$ <?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></s></div>
+                                <div class="price">R$<?php echo number_format((float)$woo_prices['sale_price'], 2, ',', ''); ?></div>
+                                <div class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></div>
                             <?php } else { ?>
-                                <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
+                                <div class="price">R$<?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></div>
+                                <div class="installment">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></div>
                             <?php } ?>
                         <?php } ?>
                     </div>
@@ -264,8 +277,9 @@ get_header();
                     <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                     <div class="content-img-product">
                         <?php $woo_prices = woocommerce_prices($product);
-                        if ($woo_prices['on_sale']) { ?>
-                            <span class="badge-sale">Promoção</span>
+                        if ($woo_prices['on_sale']) {
+                            $off = 100-($woo_prices['sale_price']*100)/$woo_prices['regular_price'];?>
+                            <span class="badge-sale"><?= "$off% OFF" ?></span>
                         <?php } ?>
                         <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                         <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
@@ -275,13 +289,22 @@ get_header();
                         <div class="product-name pt-2"><?php the_title() ?></div>
                         <div class="content-prices d-flex pb-2 pt-3">
                             <?php if ($woo_prices['type'] == 'variable') { ?>
-                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                                <div class="price price-variation">
+                                    <?php echo do_shortcode('[product_price]'); ?>
+                                    <?php if ($woo_prices['on_sale']) { ?>
+                                        <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></small>
+                                    <?php } else { ?>
+                                        <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></small>
+                                    <?php } ?>
+                                </div>
                             <?php } else { ?>
                                 <?php if ($woo_prices['on_sale']) { ?>
-                                    <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
-                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
+                                    <div class="last-price"><s>R$ <?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></s></div>
+                                    <div class="price">R$<?php echo number_format((float)$woo_prices['sale_price'], 2, ',', ''); ?></div>
+                                    <div class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></div>
                                 <?php } else { ?>
-                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
+                                    <div class="price">R$<?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></div>
+                                    <div class="installment">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></div>
                                 <?php } ?>
                             <?php } ?>
                         </div>
@@ -329,8 +352,9 @@ get_header();
                 <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                 <div class="content-img-product">
                     <?php $woo_prices = woocommerce_prices($product);
-                    if ($woo_prices['on_sale']) { ?>
-                        <span class="badge-sale">Promoção</span>
+                    if ($woo_prices['on_sale']) {
+                        $off = 100-($woo_prices['sale_price']*100)/$woo_prices['regular_price'];?>
+                        <span class="badge-sale"><?= "$off% OFF" ?></span>
                     <?php } ?>
                     <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                     <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
@@ -340,13 +364,22 @@ get_header();
                     <div class="product-name pt-2"><?php the_title() ?></div>
                     <div class="content-prices d-flex pb-2 pt-3">
                         <?php if ($woo_prices['type'] == 'variable') { ?>
-                            <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                            <div class="price price-variation">
+                                <?php echo do_shortcode('[product_price]'); ?>
+                                <?php if ($woo_prices['on_sale']) { ?>
+                                    <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></small>
+                                <?php } else { ?>
+                                    <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></small>
+                                <?php } ?>
+                            </div>
                         <?php } else { ?>
                             <?php if ($woo_prices['on_sale']) { ?>
-                                <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
-                                <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
+                                <div class="last-price"><s>R$ <?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></s></div>
+                                <div class="price">R$<?php echo number_format((float)$woo_prices['sale_price'], 2, ',', ''); ?></div>
+                                <div class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></div>
                             <?php } else { ?>
-                                <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
+                                <div class="price">R$<?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></div>
+                                <div class="installment">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></div>
                             <?php } ?>
                         <?php } ?>
                     </div>
@@ -376,8 +409,9 @@ get_header();
                     <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                     <div class="content-img-product">
                         <?php $woo_prices = woocommerce_prices($product);
-                        if ($woo_prices['on_sale']) { ?>
-                            <span class="badge-sale">Promoção</span>
+                        if ($woo_prices['on_sale']) {
+                            $off = 100-($woo_prices['sale_price']*100)/$woo_prices['regular_price'];?>
+                            <span class="badge-sale"><?= "$off% OFF" ?></span>
                         <?php } ?>
                         <img class="img-product img-responsive" src="<?= (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : 'https://via.placeholder.com/300x300&text=@nandaresendejoias' ?>" alt="Imagem do Produto">
                         <a class="btn-add-to-cart add_to_cart_button ajax_add_to_cart <?= $product->get_type() == 'simple' ? 'product_type_simple' : 'product_type_variable' ?>" href="<?= $product->get_type() == 'simple' ? '?add-to-cart='.$product->get_id() : $product->get_permalink() ?>" data-quantity="1" data-toggle="tooltip" data-placement="top" title="Add carrinho">Add carrinho</a>
@@ -387,13 +421,22 @@ get_header();
                         <div class="product-name pt-2"><?php the_title() ?></div>
                         <div class="content-prices d-flex pb-2 pt-3">
                             <?php if ($woo_prices['type'] == 'variable') { ?>
-                                <div class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></div>
+                                <div class="price price-variation">
+                                    <?php echo do_shortcode('[product_price]'); ?>
+                                    <?php if ($woo_prices['on_sale']) { ?>
+                                        <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></small>
+                                    <?php } else { ?>
+                                        <small class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></small>
+                                    <?php } ?>
+                                </div>
                             <?php } else { ?>
                                 <?php if ($woo_prices['on_sale']) { ?>
-                                    <div class="last-price"><s>R$ <?php echo $woo_prices['regular_price'] ?></s></div>
-                                    <div class="price">R$<?php echo $woo_prices['sale_price'] ?></div>
+                                    <div class="last-price"><s>R$ <?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></s></div>
+                                    <div class="price">R$<?php echo number_format((float)$woo_prices['sale_price'], 2, ',', ''); ?></div>
+                                    <div class="installment w-100">ou 3x de R$<?php echo number_format((float)$woo_prices['sale_price']/3, 2, ',', ''); ?></div>
                                 <?php } else { ?>
-                                    <div class="price">R$<?php echo $woo_prices['regular_price'] ?></div>
+                                    <div class="price">R$<?php echo number_format((float)$woo_prices['regular_price'], 2, ',', ''); ?></div>
+                                    <div class="installment">ou 3x de R$<?php echo number_format((float)$woo_prices['regular_price']/3, 2, ',', ''); ?></div>
                                 <?php } ?>
                             <?php } ?>
                         </div>

@@ -839,6 +839,7 @@ outline: none!important;
   justify-content: space-between;
   vertical-align: middle;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 
@@ -848,6 +849,22 @@ outline: none!important;
 .section-products .last-price,
 .section-product-sugestion .last-price {
   color: #D82700;
+  flex: 1;
+}
+
+.section-products-featured .content-prices .installment,
+.section-plus-sale .content-prices .installment,
+.section-products .content-prices .installment,
+.section-product-sugestion .content-prices .installment {
+  width: 100%;
+  color: #707070;
+}
+
+.price.price-variation > span.product-price > del {
+  color: #D82700!important;
+  font-size: 0.85em;
+  opacity: 1!important;
+  font-weight: normal;
 }
 
 .section-products-featured .price,
@@ -857,6 +874,7 @@ outline: none!important;
   color: #752566!important;
   font-size: 1.2em!important;
   font-weight: 500!important;
+  margin: 0!important;
 }
 
 .section-products-featured .price.price-variation,
@@ -2519,6 +2537,15 @@ table.shop_table.cart.woocommerce-cart-form__contents tr.woocommerce-cart-form__
   .header-uper .contact-info .item {
     margin-right: 0!important;
   }
+  .section-products-featured .last-price,
+  .section-plus-sale .last-price,
+  .section-products .last-price,
+  .section-product-sugestion .last-price {
+    font-size: 0.8em!important;
+  }
+  .price.price-variation > span.product-price > del {
+    font-size: 0.65em;
+  }
 }
 
 @media screen and (max-width: 991px) and (min-width: 768px) {
@@ -2535,6 +2562,15 @@ table.shop_table.cart.woocommerce-cart-form__contents tr.woocommerce-cart-form__
   }
   .content-newsletter-nandaresende .input-group-append #button-addon2 {
     padding: 10px;
+  }
+  .section-products-featured .last-price,
+  .section-plus-sale .last-price,
+  .section-products .last-price,
+  .section-product-sugestion .last-price {
+    font-size: 0.8em!important;
+  }
+  .price.price-variation > span.product-price > del {
+    font-size: 0.65em;
   }
 }
 
@@ -6757,20 +6793,11 @@ li.item.item-icons-cart.item-cart:hover {
   .google-map-area {
     margin-right: 0px !important;
   }
-  .section-products-featured .last-price,
-  .section-plus-sale .last-price,
-  .section-products .last-price,
-  .section-product-sugestion .last-price {
-    display: none;
-  }
   .section-products-featured .price.price-variation,
   .section-plus-sale .price.price-variation,
   .section-products .price.price-variation,
   .section-product-sugestion .price.price-variation {
     font-size: 1.2em;
-  }
-  .price.price-variation del {
-    display:none;
   }
 
 }

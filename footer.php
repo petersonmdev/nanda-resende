@@ -63,7 +63,7 @@
                         </div>
                         <div class="content-middle-footer content-middle-footer mt-5 pt-4">
                             <h6 class="title-footer-top">Funcionamento</h6>
-                            <p>De segunda a Quinta, das 7h as 17h. Sexta-feira, das 7h as 16h</p>
+                            <p>De segunda a sexta, das 9h as 17h. Sábado, das 9h as 12h</p>
                         </div>
                     </div>
                     <div class="col-lg-1 d-lg-block d-md-none mb-4"></div>
