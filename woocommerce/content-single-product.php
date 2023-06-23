@@ -114,12 +114,21 @@ $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_j
                                     <?= ($the_product['on_sale']) ? '<span class="seal-variation-sale">Produto em promoção</span>' : '' ?>
                                     <h3 class="last-price"><s>R$<?php echo number_format($the_product['regular_price'], 2, ',', ''); ?></s></h3>
                                     <h1 class="price">R$<?php echo number_format($the_product['sale_price'], 2, ',', ''); ?></h1>
+                                    <h5 class="installment w-100">ou 3x de R$<?php echo number_format((float)$the_product['sale_price']/3, 2, ',', ''); ?></h5>
                                 <?php }else{ ?>
                                     <h1 class="price">R$<?php echo number_format($the_product['regular_price'], 2, ',', ''); ?></h1>
+                                    <h5 class="installment w-100">ou 3x de R$<?php echo number_format((float)$the_product['regular_price']/3, 2, ',', ''); ?></h5>
                                 <?php } ?>
                                 <?php
                             } else { ?>
-                                <h1 class="price price-variation"><?php echo do_shortcode('[product_price]'); ?></h1>
+                                <h1 class="price price-variation">
+                                    <?php echo do_shortcode('[product_price]'); ?>
+                                    <?php if ($the_product['on_sale']) { ?>
+                                        <h5 class="installment w-100">ou 3x de R$<?php echo number_format((float)$the_product['sale_price']/3, 2, ',', ''); ?></h5>
+                                    <?php } else { ?>
+                                        <h5 class="installment w-100">ou 3x de R$<?php echo number_format((float)$the_product['regular_price']/3, 2, ',', ''); ?></h5>
+                                    <?php } ?>
+                                </h1>
                             <?php } ?>
                             <span class="d-block pt-3"><?php the_excerpt(); ?></span>
                         </div>
