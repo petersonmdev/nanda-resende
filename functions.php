@@ -546,12 +546,12 @@ function my_wc_mini_cart_content(){
         }
     endforeach;
     if ($cart) {
-        $subtotal = number_format(WC()->cart->get_subtotal(), 2,",");
+        $subtotal = number_format((float)WC()->cart->get_subtotal(), 2,",", "");
         ?>
         <li class="cart-items subtotal">
             <div>
                 <h5 class="text-center subtotal-text">
-                Subtotal: <span id="cart-subtotal"><?php echo 'R$ '.$subtotal; ?></span>
+                Subtotal: <span id="cart-subtotal"><?php echo "R$ $subtotal"; ?></span>
                 </h5>
             </div>
         </li>
@@ -913,6 +913,63 @@ add_filter( 'esc_html', 'change_first_order_fee_label', 10, 2 );
 /**
  * Fim desconto para primeira compra
  */
+
+/**
+* Adiciona desconto de 5% para pedidos com pagamento via pix
+ */
+
+
+function wc_pix_discount() {
+    $pix_pay = WC()->session->get( 'payment_pix' );
+    if (!$pix_pay ) {
+        return;
+    }
+
+    $chosen_payment_method = WC()->session->get('chosen_payment_method');
+
+    if ($chosen_payment_method === 'woo-pagarme-payments-pix') {
+        $discount = WC()->cart->subtotal * 0.05;
+        WC()->cart->add_fee('Desconto Pix (-5%)', -$discount);
+    }
+}
+
+function apply_pix_discount() {
+
+    WC()->session->set( 'payment_pix', null );
+    $cart = WC()->cart;
+
+    $cart->remove_coupon('pix_discount');
+
+    if ($_POST['payment_method'] === 'woo-pagarme-payments-pix') {
+        WC()->session->set('payment_pix', true);
+    } else {
+        WC()->session->set('payment_pix', null);
+    }
+
+    $cart->calculate_totals();
+
+    die();
+}
+
+function add_pix_discount_label($icon_html, $gateway_id) {
+
+    if ($gateway_id === 'woo-pagarme-payments-pix') {
+        $icon_html .= ' <small class="pix-discount-label">5% de desconto</small>';
+    }
+
+    return $icon_html;
+}
+
+add_filter('woocommerce_gateway_icon', 'add_pix_discount_label', 10, 2);
+add_action( 'woocommerce_cart_calculate_fees', 'wc_pix_discount' );
+add_action('wp_ajax_apply_pix_discount', 'apply_pix_discount');
+add_action('wp_ajax_nopriv_apply_pix_discount', 'apply_pix_discount');
+
+
+/**
+* Fim desconto de 5% para pedidos com pagamento via pix
+ */
+
 
 function custom_alertify_replace_notices() {
 

@@ -25,6 +25,28 @@
             });
         });
 
+        $('form.checkout').on('change', 'input[name="payment_method"]', function() {
+            var paymentMethod = $(this).val();
+            console.log("paymentMethod: ", paymentMethod);
+
+            $.ajax({
+                type: 'POST',
+                url: wc_checkout_params.ajax_url,
+                data: {
+                    action: 'apply_pix_discount',
+                    payment_method: paymentMethod
+                },
+                success: function(response) {
+                    $('body').trigger('update_checkout');
+                }
+            });
+        });
+
+        var defaultPaymentMethod = $('input[name="payment_method"]:checked').val();
+        if (defaultPaymentMethod === 'woo-pagarme-payments-pix') {
+            $('form.checkout').find('input[name="payment_method"]').trigger('change');
+        }
+
     });
 
 })(window.jQuery);

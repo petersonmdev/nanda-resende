@@ -147,7 +147,6 @@ input:focus ~ .highlight {
   vertical-align: middle;
   align-items: center;
   justify-content: space-between;
-  margin-left: 250px;
 }
 
 li.item.item-menu.item-menu-last-icons {

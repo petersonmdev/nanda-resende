@@ -148,7 +148,7 @@ $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
                                   <span class="material-symbols-outlined">
                                       shopping_cart
                                   </span>
-                                  <span id="mini-cart-count" class="contador-cart"></span>
+                                  <span id="mini-cart-count" class="contador-cart"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
                               </a>
                               <div class="dropdown-content cart">
                                   <ul class="list-unstyled">
@@ -196,7 +196,7 @@ $target = 'https://wa.me/'.urldecode($number).'?text='.urlencode($msg);
                                 <span class="material-symbols-outlined">
                                   shopping_cart
                                 </span>
-                                <span id="mini-cart-count-mobile" class="contador-cart"></span>
+                                <span id="mini-cart-count-mobile" class="contador-cart"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
                             </a>
                         </li>
                     </ul>
