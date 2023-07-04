@@ -814,6 +814,10 @@ outline: none!important;
   font-size: 0.9em;
 }
 
+.section-products .category-name {
+  line-height: 1!important;
+}
+
 .section-products-featured .product-name,
 .section-plus-sale .product-name,
 .section-products .product-name,
