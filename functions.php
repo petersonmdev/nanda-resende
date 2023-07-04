@@ -970,6 +970,37 @@ add_action('wp_ajax_nopriv_apply_pix_discount', 'apply_pix_discount');
 * Fim desconto de 5% para pedidos com pagamento via pix
  */
 
+/**
+* Otimizando pesquisa
+ * Considerando titulo, descrição, categoria e palavra chave
+ */
+
+function custom_wc_product_search( $search, $wp_query ) {
+    if ( ! is_admin() && $wp_query->is_main_query() && is_search() ) {
+        $search_terms = $wp_query->query_vars['s'];
+        $search = "AND (
+            (wp_posts.post_title LIKE '%$search_terms%')
+            OR (wp_posts.post_content LIKE '%$search_terms%')
+            OR (wp_posts.post_excerpt LIKE '%$search_terms%')
+            OR (wp_posts.ID IN (
+                SELECT distinct tr.object_id
+                FROM wp_terms t
+                INNER JOIN wp_term_taxonomy tt ON tt.term_id = t.term_id
+                INNER JOIN wp_term_relationships tr ON tr.term_taxonomy_id = tt.term_taxonomy_id
+                WHERE (
+                    tt.taxonomy = 'product_cat'
+                    AND t.slug LIKE '%$search_terms%'
+                )
+            ))
+        )";
+    }
+    return $search;
+}
+add_filter( 'posts_search', 'custom_wc_product_search', 10, 2 );
+
+/**
+* Fim da otimizando pesquisa
+ */
 
 function custom_alertify_replace_notices() {
 

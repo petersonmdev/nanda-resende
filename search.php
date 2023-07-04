@@ -28,20 +28,36 @@ get_header();
         	<div class="row">
 
                 <?php
-                $s=get_search_query();
-                $args = array('s' =>$s, 'post_type' => 'product');
-                // The Query
-                $the_query = new WP_Query( $args );
-                if ( $the_query->have_posts() ) {
-                    _e("<div class='col-12'><h2 class='title-nandaresende text-center mb-3'>Buscar resultados para: ".get_query_var('nanda-resende')."</h2></div>"); ?>
 
+                if ( have_posts() ) {
+                    _e("<div class='col-12'><h2 class='title-nandaresende text-center mb-3'>Buscar resultados para: ".get_search_query('nanda-resende')."</h2></div>"); ?>
+
+                    <div class="col-12">
+                        <div class="search-result-count default-max-width pb-4">
+                            <?php
+                            printf(
+                                esc_html(
+                                /* translators: %d: The number of search results. */
+                                    _n(
+                                        'We found %d result for your search.',
+                                        'We found %d results for your search.',
+                                        (int) $wp_query->found_posts,
+                                        'twentytwentyone'
+                                    )
+                                ),
+                                (int) $wp_query->found_posts
+                            );
+                            ?>
+                        </div>                    </div>
                     <div class="col-12 container-main container-main-nandaresende">
 			            <div class="content-all-products">
 				            <div class="row align-items-center">
-				              	<?php while ( $the_query->have_posts() ) {
-	                        		$the_query->the_post();
+				              	<?php while ( have_posts() ) {
+	                        		the_post();
                                     $product = wc_get_product(get_the_ID()); ?>
+
 		                            <div class="product col-lg-2 col-md-3 col-sm-4 col-6 mb-5 px-2">
+                                        <?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
                                         <div class="content-img-product">
                                             <?php $woo_prices = woocommerce_prices($product);
                                             if ($woo_prices['on_sale']) {
@@ -76,7 +92,8 @@ get_header();
                                                 <?php } ?>
                                             </div>
                                         </a>
-                                        <a href="<?php the_permalink(); ?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>
+                                        <?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
+                                        <!--<a href="<?php /*the_permalink(); */?>" class="btn btn-lg btn-nandaresende-first">Comprar</a>-->
 				                    </div>
 				                <?php } ?>
 			                </div>
